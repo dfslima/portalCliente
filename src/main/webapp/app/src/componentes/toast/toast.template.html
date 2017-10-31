@@ -1,0 +1,18 @@
+<md-toast
+        ng-class="{'message-success': type == 'success',
+					 'message-danger': type == 'danger',
+					 'message-warning': type == 'warning',
+					 'message-info': type == 'info'}">
+    <div
+            style="margin-left: -10px; padding-right: 15px; font-size: 21px; top: 100px;">
+        <a
+                ng-class="{'fa fa-check-circle colorWhite': type == 'success',
+					  'fa fa-times-circle colorWhite': type == 'danger',
+					  'fa fa-exclamation-triangle colorWhite': type === 'warning',
+					  'fa fa-info-circle colorWhite': type === 'info'}">
+        </a>
+    </div>
+
+    <span flex>{{msg}}</span> <br/>
+    <button class="button-toast" ng-click="closeToast()"><i class="fa fa-times fa-1x"></i></button>
+</md-toast>

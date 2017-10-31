@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h3 class="title centralizer">Deseja remover este segurado?</h3>
+</div>
+<div class="modal-body">
+    <label>Nome:&nbsp;</label><span ng-if="item.type == 1">{{item.name}}</span><span ng-if="item.type == 2">{{item.corporateName}}</span>
+    <br />
+    <label>CNPJ: </label> {{maskCpfCnpj(item.cpfCnpj)}}
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">Sim</button>
+    <button class="btn btn-warning" ng-click="cancel()">Não</button>
+</div>

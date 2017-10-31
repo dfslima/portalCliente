@@ -1,0 +1,6 @@
+<pagination total-items="$parent.totalItens" ng-model="$parent.firstResult"
+	max-size="$parent.maxSize" items-per-page="$parent.maxResults" class="pagination-sm"
+	boundary-links="true" rotate="false"
+	ng-change="$parent.pageChanged($parent.firstResult)" previous-text="&lsaquo;"
+	next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+</pagination>

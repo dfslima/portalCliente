@@ -1,0 +1,98 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div style="float:right; margin-top:35px;">
+            <a href="#/create-customer" class="btn btn-primary btn-circle" tooltip="Novo Segurado"><i
+                    class="fa fa-plus"></i></a>
+        </div>
+        <h3 class="page-header">Consulta de Segurados</h3>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Filtro de pesquisa</div>
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <label>Nome</label> <input class="form-control" ng-model="nameCustomer" placeholder="Nome do segurado">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>CPF/CNPJ</label>
+                        <input class="form-control"	ng-model="cpfCnpjCustomer" autocomplete="off" ui-br-cpfcnpj-mask
+                               onkeypress="return onlyNumber(event)" placeholder="Digite um CPF/CNPJ">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Tipo Segurado</label>
+                        <select class="form-control" ng-model="typeCustomer">
+                            <option value="">Selecione</option>
+                            <option value="1">Pessoa Fisica</option>
+                            <option value="2">Pessoa Juridica</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="btn btn-primary" ng-click="search()">Pesquisar</button>
+                        <button class="btn btn-default" ng-click="clear()">Limpar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <br/>
+</div>
+
+<br/>
+
+<div class="row" ng-show="isShow">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Lista de Corretoras
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                        <tr>
+                            <th class="centralizer">Nome</th>
+                            <th class="text-left">CPF</th>
+                            <th class="centralizer">Telefone</th>
+                            <th class="centralizer">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="gradeU" ng-repeat="item in itens">
+                            <td class="text-left text-uppercase">{{item.name}}</td>
+                            <td class="centralizer">{{maskCpfCnpj(item.cpfCnpj)}}</td>
+                            <td class="centralizer">{{maskPhone(item.phone)}}</td>
+                            <td class="centralizer">
+                                <a href="" ng-click="edit(item.id)" tooltip="Editar">
+                                    <span class="fa fa-fw fa-edit fa-2x"></span>
+                                </a>
+                                <a href="" ng-click="remove(item)" tooltip="Excluir">
+                                    <span class="fa fa-trash-o fa-2x"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-include="pagination"></div>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>

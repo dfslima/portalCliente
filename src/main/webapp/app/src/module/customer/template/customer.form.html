@@ -1,0 +1,94 @@
+<div class="row" style="float:left; margin-top:35px;">
+    <div class="col-lg-12">
+        <h4 class="page-header-custom" ng-show="!showType">Cadastro de Segurados</h4>
+        <h4 class="page-header-custom" ng-show="showType">Alterar Segurado</h4>
+    </div>
+</div>
+<form name="customerForm" novalidate>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="panel panel-default" ng-show="!showType">
+                <div class="panel-heading">Tipo de Segurado</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <select type="radio" name="optionsRadios" id="optionsRadios1"
+                                        ng-init="customerType = 1" ng-model="customerType"
+                                        ng-change="selectedCustomer(customerType)" class="form-control">
+                                    <option value="1">Pessoa Física</option>
+                                    <option value="2">Pessoa Jurídica</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Dados do Segurado</div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div ng-include="formType"></div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Telefone<i class="colorRequired">*</i></label> <input autocomplete="off"
+                                             class="form-control" ng-model="customer.phone" placeholder="(00) 00000-0000"
+                                             ng-minlength="10" name="phone" ui-br-phone-number required>
+
+                                        <span ng-show="customerForm.phone.$invalid && validate" class="errorForm">
+						                   	Informe um telefone válido
+						               	</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>Celular</label>
+                                        <input class="form-control" autocomplete="off" placeholder="(00) 00000-0000"
+                                               ng-model="customer.mobilePhone" ui-br-phone-number>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>E-mail<i class="colorRequired">*</i></label>
+                                        <input class="form-control" ng-model="customer.email" type="text" v-email lower-case autocomplete="off"
+                                               name="inputemail" maxlength="50" required placeholder="exemplo@email.com" />
+
+                                        <span ng-show="customerForm.inputemail.$invalid && validate" class="errorForm">
+						                   	Informe um e-mail válido
+						               	</span>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Observa&ccedil;&otilde;es</label> <br />
+                                        <textarea name="observacoes" class="form-control" maxlength="450" placeholder="Observa&ccedil;&otilde;es sobre o segurado" ng-model="customer.observation" rows="1"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-include="formAddress">
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="Button btn btn-primary" v-busy="isBusy" ng-click="save(customerForm)" v-pressable v-busy-label="Salvando">Salvar</button>
+            <button class="btn btn-default" ng-click="goBack()">Cancelar</button>
+
+        </div>
+    </div>
+
+</form>
+
+<br />
