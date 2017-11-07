@@ -4,12 +4,13 @@ var app =
         'PortalCliente.dashboardController',
         'PortalCliente.insurerManager', 'PortalCliente.insurerService',
         'PortalCliente.brokerageManager', 'PortalCliente.brokerageService',
-        'PortalCliente.producerManager', 'PortalCliente.producerService',
+        'PortalCliente.producerService',
         'PortalCliente.userManager', 'PortalCliente.userService',
         'PortalCliente.contantes',
 
         'PortalCliente.customerManager',
-        'PortalCliente.PropertyManager'
+        'PortalCliente.PropertyManager',
+        'PortalCliente.producerManager'
 
     ]).config(['$routeProvider', 'RestangularProvider', '$httpProvider', '$mdThemingProvider',
         function ($routeProvider, RestangularProvider, $httpProvider, $mdThemingProvider) {

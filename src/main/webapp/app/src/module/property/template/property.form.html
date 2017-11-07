@@ -1,0 +1,82 @@
+<div class="row" style="float:left; margin-top:35px;">
+    <div class="col-lg-12">
+        <h4 class="page-header-custom">{{routeProperty.titulo}}</h4>
+    </div>
+</div>
+<form name="propertyForm" novalidate>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dados do Segurado</div>
+                <div class="panel-body">
+                    <div class="row" ng-if="!isDisplayFields">
+                        <div class="col-lg-5">
+                            <div class="form-group">
+
+                                <label>Nome/CPF-CNPJ<i class="colorRequired">*</i></label>
+                                <input type="text" ng-model="customer.name" class="form-control" name="customer" autocomplete="off"
+                                       placeholder="Clique para selecionar um proprietário"
+                                       typeahead="item as showNameCustomer(item) +' - '+ maskCpfCnpj(item.cpfCnpj) for item in autoCompleteCustomer($viewValue)"
+                                       typeahead-on-select="onSelectCustomer($item)" required />
+
+                                <span ng-show="propertyForm.customer.$invalid && validate" class="errorForm">
+                                	O Segurado precisa ser preenchido
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="isDisplayFields">
+
+                        <div class="col-md-12">
+                            <div class="form-group text-edit-properties" ng-show="isDisplayFields">
+                                <label>Editar segurado</label>
+                                <a href="" class="btn btn-info btn-xs" ng-click="clearCustomer()" tooltip="Aterar segurado">
+                                    <span class="fa fa-fw fa-edit"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <strong>CPF/CNPJ:</strong> {{maskCpfCnpj(customer.cpfCnpj)}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <strong>Nome:</strong>
+                                <span ng-if="customer.type == 1" tooltip="{{customer.name | hidetext:30}}">{{customer.name | chiptext:30}}</span>
+                                <span ng-if="customer.type == 2" tooltip="{{customer.corporateName | hidetext:30}}">{{customer.corporateName | chiptext:30}}</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <strong>Telefone:</strong> {{maskPhone(customer.phone)}}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row" ng-show="isDisplayFields">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <strong>E-mail:</strong> {{customer.email}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-include="routeProperty.template"></div>
+    <div class="row" ng-include="routeProperty.address"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="Button btn btn-primary" v-busy="isBusy" ng-click="save()" v-pressable
+                    v-busy-label="Salvando">Salvar
+            </button>
+            <button class="btn btn-default" ng-click="goBack()">Cancelar</button>
+        </div>
+    </div>
+</form>
+<br/>

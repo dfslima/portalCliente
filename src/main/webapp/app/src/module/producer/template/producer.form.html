@@ -1,0 +1,111 @@
+﻿<div class="row" style="float:left; margin-top:35px;">
+    <div class="col-lg-12">
+        <h4 class="page-header-custom">{{titlePage}}</h4>
+    </div>
+</div>
+
+<form name="producerForm" novalidate>
+    <div class="panel panel-default">
+        <div class="panel-heading">Dados do Produtor</div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>Nome<i class="colorRequired">*</i></label>
+                                <input class="form-control" name="name" ng-model="producer.name" maxlength="70"
+                                       required>
+
+                                <span ng-show="producerForm.name.$invalid && validate" class="errorForm">
+						                  					Informe seu nome
+						            					</span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>CPF<i class="colorRequired">*</i></label>
+                                <input class="form-control" name="cpf" ng-model="producer.cpf" v-cpfcnpj
+                                       onkeypress="return onlyNumber(event)" ng-minlength="11" required/>
+
+                                <span ng-show="producerForm.cpf.$invalid && validate" class="errorForm">
+						                  					Informe um cpf válido
+						            					</span>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>RG</label>
+                                <input class="form-control" ng-model="producer.generalRecord"
+                                       onkeypress="return onlyNumber(event)" maxlength="9"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Orgão Expedidor</label>
+                        <input class="form-control" ng-model="producer.consignorOrgan" maxlength="15"/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Celular<i class="colorRequired">*</i></label>
+                        <input class="form-control" ng-model="producer.mobilePhone" name="mobilePhone"
+                               ui-br-phone-number maxlength="16" required>
+
+                        <span ng-show="producerForm.mobilePhone.$invalid && validate" class="errorForm">
+						                  					Informe seu celular
+						            					</span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input class="form-control" name="phone" ng-model="producer.phone" ui-br-phone-number/>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>E-mail<i class="colorRequired">*</i></label>
+                        <input class="form-control" type="text" name="email" v-email ng-disabled="true"
+                               ng-model="producer.email" maxlength="50" required/>
+
+                        <span ng-show="producerForm.email.$invalid && validate" class="errorForm">
+											            	Informe um e-mail válido
+											            </span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <select class="form-control" ng-model="producer.gender"
+                                ng-options="genre.value as genre.name for genre in genres">
+                            <option value="">SELECIONE...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-include="formAddress"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary" ng-disabled="isBusy" v-busy="isBusy" v-pressable
+                    v-busy-label="Salvando, aguarde..." ng-click="save(producerForm)">Salvar
+            </button>
+            <!-- <button class="btn btn-default" ng-click="goBack()">Cancelar</button> -->
+        </div>
+    </div>
+
+    <br/>
+
+</form>

@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+	<div class="panel-heading"><i class="fa fa-search fa-fw" style="margin-right: 7px;"></i>Pesquisar...</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-md-3">
+				
+				<label>Segurado</label>
+				<input type="text" ng-model="$parent.customer.name" class="form-control" name="customer" autocomplete="off"
+					   typeahead="item as showNameCustomer(item) +' - '+ maskCpfCnpj(item.cpfCnpj) for item in autoCompleteCustomer($viewValue)"
+					   typeahead-on-select="onSelectCustomer($item)" required />
+			</div>			
+		</div>
+		<div class="row">
+			 <div class="col-md-3">
+			 	<br />
+			 	<button class="Button btn btn-primary" ng-click="search()" v-busy="isBusy" v-pressable v-busy-label="Pesquisando">Pesquisar</button>
+			 	<button class="btn btn-default" ng-click="clear()">Limpar</button>
+			 </div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><i class="fa fa-bars fa-fw" style="margin-right: 7px;"></i>Lista de Vidas</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover" id="dataTables-example">
+						<thead>
+							<tr class="font-size-grid">
+								<th class="leftAlign">Proprietário</th>
+								<th class="leftAlign">Ativ. Profissional / Beneficiário(s)</th>
+								<th class="centralizer">Qtde. Vidas</th>
+								<th class="leftAlign">Observações</th>
+								<th class="centralizer">Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="gradeU font-size-grid" ng-repeat="item in itens" ng-show="isShow">
+								<td class="leftAlign">
+									<span ng-if="item.customer.type == 1">{{item.customer.name}}</span>
+									<span ng-if="item.customer.type == 2">{{item.customer.corporateName}}</span>
+								</td>
+								<td class="leftAlign">{{description(item, item.propertyType)}}</td>
+								<td class="centralizer">{{item.life.lifeQuantity}}</td>
+								<td class="leftAlign">{{item.description}}</td>
+								<td class="centralizer">
+									<a href="" class="btn btn-info btn-xs" ng-click="edit(item.id)" tooltip="Visualizar">
+										<span class="fa fa-fw fa-search"></span>
+									</a>							
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<h5 class="centralizer" ng-show="!isShow" style="color:#C0C0C0;">Não existe nenhum resultado para esta busca</h5>
+		                    
+		            <div ng-show="isShow" ng-include="pagination"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,94 @@
+ <div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Dados da Embarcação
+        </div>
+        <div class="panel-body">
+            <div class="row">              
+            	<div class="col-lg-4">
+					<div class="form-group">
+		            	<label>Tipo<i class="colorRequired">*</i></label>
+		                <select class="form-control" name="boatType" required 
+		                	ng-model="$parent.property.vessel.boatTypeId"
+		                    ng-options="item.value as item.name for item in vesselTypes"> 
+		                	<option value="">-- SELECIONE --</option>                
+		              	</select>
+		              	 <span ng-show="propertyForm.boatType.$invalid && validate" class="errorForm">
+                         	O tipo de embarcação precisa ser preenchido.
+                         </span>
+		           	</div>   
+				</div>   
+                <div class="col-lg-8">              
+                	<div class="form-group">
+                    	<label>Nome Embarcação<i class="colorRequired">*</i></label>
+                    	<input class="form-control" name="boatName" autocomplete="off" required 
+                    		ng-model="$parent.property.vessel.boatName" maxlength="90">
+                    	 <span ng-show="propertyForm.boatName.$invalid && validate" class="errorForm">
+                         	O nome da embarcação precisa ser preenchido.
+                         </span>
+                 	</div>
+                </div>
+         	</div>
+			<div class="row">                
+                <div class="col-lg-4">
+                 	<div class="form-group">
+                    	<label>Comprimento Embarcação</label>
+                     	<input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatLength" maxlength="11" ui-number-mask="1" />                                
+                 	</div>  
+                </div>
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>PS Básica</label>
+	                    <input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatPsBasic" maxlength="90">
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>Tempo Experiência</label>
+						<input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatExperienceTime" maxlength="90">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>Limite Navegação</label>
+						<input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatNavigationLimit" maxlength="90">
+					</div>
+				</div>
+                <div class="col-lg-4">
+	            	<div class="form-group">
+	                	<label>LGM Básica (0-9)</label>
+	                    <input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatLgm" maxlength="11" onkeypress="return onlyNumber(event)" />
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>LGM Assistência e Salvamento (0-9)</label>
+						<input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatSa" maxlength="11" onkeypress="return onlyNumber(event)" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>LGM Responsabilidade Civil</label>
+	                    <input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.boatLiability" maxlength="90">
+	                </div>   
+				</div>   
+				<div class="col-lg-4">                                 
+					<div class="form-group">
+						<label>Idade da Embarcação (Anos)</label>
+						<input class="form-control" autocomplete="off" ng-model="$parent.property.vessel.ageVessel" maxlength="11" onkeypress="return onlyNumber(event)" />
+					</div>  
+				</div>
+                <div class="col-lg-4">                                      
+	            	<div class="form-group">
+	                	<label>Observações</label>
+	                    <input class="form-control" autocomplete="off" ng-model="$parent.property.description" maxlength="250">
+					</div>  
+				</div>                                   
+            </div>
+        </div>
+    </div>
+</div>

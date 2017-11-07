@@ -1,0 +1,56 @@
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Dados do Equipamento
+        </div>
+        <div class="panel-body">
+            <div class="row">              
+				<div class="col-lg-4">                                                 
+	            	<div class="form-group">
+	                	<label>Número de série</label>
+	                    <input class="form-control" autocomplete="off" ng-model="$parent.property.equipment.equipmentDetails" maxlength="250">
+					</div>
+				</div>
+				<div class="col-lg-4"> 
+	            	<div class="form-group">
+	                	<label>Fabricante<i class="colorRequired">*</i></label>
+	                	<input type="text" class="form-control" name="equipmentMake" autocomplete="off" required
+	                		ng-model="$parent.property.equipment.equipmentMake" maxlength="250">
+	                	 <span ng-show="equipamentForm.equipmentMake.$invalid && validate" class="errorForm">
+                         	O fabricante precisa ser preenchido.
+						 </span>                                
+	            	</div>
+	           	</div>
+	            <div class="col-lg-4"> 
+	            	<div class="form-group">
+	                	<label>Modelo<i class="colorRequired">*</i></label>
+	                 	<input type="text" class="form-control" name="equipmentModel" autocomplete="off" required 
+	                 		ng-model="$parent.property.equipment.equipmentModel" maxlength="250">
+	                 	<span ng-show="equipamentForm.equipmentModel.$invalid && validate" class="errorForm">
+                         	O modelo precisa ser preenchido.
+						 </span>   
+	             	</div>
+	            </div>
+			</div>					          
+			<div class="row">			           
+				<div class="col-lg-4"> 
+             		<div class="form-group">
+                 		<label>Ano de Fabricação<i class="colorRequired">*</i></label>
+                 		<input class="form-control" name="equipmentRegisterYear" autocomplete="off" required	
+                 			ng-model="$parent.property.equipment.equipmentRegisterYear" mask="9999">
+                 		<span ng-show="equipamentForm.equipmentRegisterYear.$invalid && validate" class="errorForm">
+                         	O ano de fabricação precisa ser preenchido.
+						 </span> 
+             		</div>
+            	</div>
+            	<div class="col-lg-4"> 
+             	<div class="form-group">
+                	<label>Descrição</label>
+                 	<input class="form-control" ng-model="$parent.property.description" autocomplete="off" maxlength="250">
+             	</div>  
+            	</div>                                   
+            </div>
+        </div>
+    </div>
+</div>
+            

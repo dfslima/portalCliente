@@ -1,0 +1,50 @@
+ <div class="col-lg-12">
+   <div class="panel panel-default">
+       <div class="panel-heading">
+           Dados do Imóvel
+       </div>
+       <div class="panel-body">
+           <div class="row">              
+                   <form role="form"> 
+                   	  <div class="col-lg-4"> 
+	                      <div class="form-group">
+	                           <label>Tipo de Moradia</label><i class="errorForm">*</i>
+	                           <select class="form-control" ng-model="$parent.property.residence.homeType" name="homeType"
+				                           ng-options="item.value as item.name for item in homeTypes" required>
+	                               <option value="">-- SELECIONE --</option>            
+	                           </select>
+	                           <span ng-show="residenceForm.homeType.$invalid && validate" class="errorForm">
+	                        		Selecione o tipo de moradia
+	                        	</span>                          
+	                       </div>
+                       </div>
+                       <div class="col-lg-4"> 
+	                       <div class="form-group">
+	                           <label>Uso</label><i class="errorForm">*</i>
+	                           <select class="form-control" ng-model="$parent.property.residence.homeUseType" name="homeUseType"
+	                           			ng-options="item.value as item.name for item in homeUseTypes" required>
+	                               <option value="">-- SELECIONE --</option>           
+	                           </select>
+	                           <span ng-show="residenceForm.homeUseType.$invalid && validate" class="errorForm">
+	                        		Selecione o uso
+	                        	</span> 
+	                       </div> 
+                       </div>  
+                       <div class="col-lg-4">    
+	                       <div class="form-group">
+	                           <label>Construção</label><i class="errorForm">*</i>
+	                           <select class="form-control" ng-model="$parent.property.residence.homeBuildingType" name="homeBuildingType"
+	                           			ng-options="item.value as item.name for item in homeBuildingTypes" required>
+	                               <option value="">-- SELECIONE --</option>           
+	                           </select>
+	                           <span ng-show="residenceForm.homeBuildingType.$invalid && validate" class="errorForm">
+	                        		Selecione a construção
+	                        	</span> 
+	                       </div>
+                       </div>      
+                   </form>
+           </div>
+       </div>
+   </div>
+</div>
+<div ng-include="property.address"></div>

@@ -1,0 +1,22 @@
+<div class="modal-header">
+	<h3 class="title centralizer" ng-if="!isTrue">Selecione a propriedade que deseja cadastrar</h3>
+	<h3 class="title centralizer" ng-if="isTrue">Selecione uma propriedade para continuar</h3>
+</div>
+<div class="modal-body">
+
+	<form role="form" name="formProp">
+		<label>Propriedade</label>
+		<select class="form-control input-segoo"
+			ng-model="property"
+			 ng-required="true"
+			ng-options="pro.value as pro.name for pro in properties">
+			<option value="">-- Selecione --</option>
+		</select>
+	</form>
+
+</div>
+<div class="modal-footer">
+
+	<button class="btn btn-sm btn-primary" ng-disabled="formProp.$invalid" ng-click="selected()">Selecionar</button>
+	<button class="btn btn-sm btn-warning" ng-click="cancel()">Cancelar</button>
+</div>

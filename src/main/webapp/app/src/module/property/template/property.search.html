@@ -1,0 +1,39 @@
+<div class="row">
+
+    <div class="col-lg-12">
+        <div style="float:right; margin-top:35px;">
+            <a href="" ng-click="selectedProperties()" class="btn btn-primary btn-circle" tooltip="Nova propriedade"
+               tooltip-placement="bottom"><i class="fa fa-plus"></i>
+            </a>
+        </div>
+        <h3 class="page-header">
+            Ramos - <span ng-if="propertyType == undefined">Nenhuma propriedade selecionada</span>
+            <span ng-if="propertyType != undefined">consulta de {{propertyName(propertyType)}}</span>
+
+            <i ng-class="{'fa fa-question-circle fa-fw': propertyType === undefined, 'fa fa-car fa-fw': propertyType === 'VEHICLE',
+					'fa fa-building-o fa-fw': propertyType === 'CONDOMINIUM','fa fa-home fa-fw': propertyType === 'RESIDENCE',
+					'fa fa-building fa-fw': propertyType === 'COMPANY','fa fa-life-ring fa-fw': propertyType === 'VESSEL',
+					'fa fa-male fa-fw': propertyType === 'LIFE','fa fa-camera fa-fw': propertyType === 'EQUIPMENT'}"    >
+
+            </i>
+        </h3>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Alterar Ramo:</strong>
+                    </div>
+                    <div class="col-md-6" style="margin-top: -10px; margin-bottom: 10px">
+                        <select class="form-control" ng-options="type.value as type.name for type in propertyTypes"
+                                ng-change="selectedSearch(propertyType)" ng-model="propertyType">
+                            <option value="">Selecione a propriedade</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="routeProperty.template"></div>
+

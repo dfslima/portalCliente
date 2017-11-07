@@ -1,0 +1,17 @@
+<div class="modal-header">
+	<p class="title centralizer">Deseja remover este produtor?</p>
+</div>
+
+<div class="modal-body">
+	<label>Nome: </label> {{item.name}}
+	<br />
+	<label>Cpf: </label> {{item.cpf}}
+	<br />
+	<label>E-mail: </label> {{item.email}}
+    
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()">Sim</button>
+   	<button class="btn btn-warning" ng-click="cancel()">Não</button>
+</div>

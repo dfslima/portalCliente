@@ -1,0 +1,142 @@
+<script type="text/ng-template" id="customTypeahead.html">
+	<a> 
+		<strong bind-html-unsafe="match.model.name"></strong>
+	</a>
+</script>
+
+<div class="col-lg-12">
+	<div class="panel panel-default">
+        	<div class="panel-heading">
+	            Auto
+    	    </div>
+        	<div class="panel-body">
+            	<div class="row">              
+	                <div class="col-lg-4"> 
+		            	<div class="form-group">
+	    	            	<label>Placa<i class="colorRequired">*</i></label>
+	                        <input class="form-control" name="vehicleLicensePlate" autocomplete="off" required
+	                        	ng-model="$parent.property.vehicle.vehicleLicensePlate" placeholder="AAA-0000"
+	                        	upper-Case mask="@@@-9999" restrict="reject">
+	                        <span ng-show="vehicleForm.vehicleLicensePlate.$invalid && validate" class="errorForm">
+	                        	A placa precisa ser preenchida.
+	                        </span>
+	                  </div>
+                    </div>
+                    
+                   	<div class="col-lg-4">
+                    	<label>Ano Fabricação<i class="colorRequired">*</i></label>
+						<select name="registerYear" class="form-control" ng-model="$parent.property.vehicle.vehicleRegisterYear"
+							ng-options="y.value as y.name for y in calYear | orderBy:'-name'" required>
+							<option value="">Selecione</option>
+						</select>
+						<span ng-show="vehicleForm.registerYear.$invalid && validate" class="errorForm">
+                        	O ano de fabricação precisa ser selecionado
+                        </span>
+					</div>
+                    
+                    <div class="col-lg-4">
+                    	<label>Ano Modelo<i class="colorRequired">*</i></label>
+						<select name="modelYear" class="form-control" ng-model="$parent.property.vehicle.vehicleModelYear"
+							ng-options="y.value as y.name for y in calYear | orderBy:'-name'" required>
+							<option value="">Selecione</option>
+						</select>
+						<span ng-show="vehicleForm.modelYear.$invalid && validate" class="errorForm">
+                        	O ano do modelo precisa ser selecionado
+                        </span>
+					</div>
+                </div>
+                <div class="row"> 
+                    <div class="col-lg-4">   
+	                	<div class="form-group">
+	                    	<label>Tipo do Auto<i class="colorRequired">*</i></label>
+	                        	<p ng-class="{'input-group': blockFieldType, '': !blockFieldType}">
+		                           <input class="form-control" ng-disabled="blockFieldType" autocomplete="off"
+										ng-model="$parent.vType" name="vehicleType" placeholder="Tipo de auto"
+										typeahead="item.value as item.name for item in vehicleTypes | filter:$viewValue"
+									  	typeahead-on-select="onSelectVehicleType($item)" required />
+									  	
+									<span class="input-group-btn" ng-show="blockFieldType">
+		                           		<button type="button" class="btn btn-default div-search"
+			                           		ng-click="enableEdit()">
+		                           			<i class="glyphicon glyphicon-pencil"></i>
+		                           		</button>
+	                           		</span>
+	                        	</p>
+	                        <span ng-show="vehicleForm.vehicleType.$invalid && validate" class="errorForm">
+	                        	O tipo precisa ser selecionado
+	                        </span>
+	                    </div> 
+                    </div> 
+                    <div class="col-lg-4">                                                               
+	                	<div class="form-group">
+	                    	<label>Fabricante<i class="colorRequired">*</i></label>
+						   <input class="form-control typeahead" ng-disabled="vehicleMakes.length == 0 || blockFieldMake"
+								ng-model="$parent.property.vehicle.vehicleMakeName" name="make" autocomplete="off" placeholder="BMW, Honda, Audi"
+								typeahead="item.name for item in vehicleMakes | filter:$viewValue"
+								typeahead-on-select="onSelectVehicleMakes($item)" required />
+                                
+	                        <span ng-show="vehicleForm.make.$invalid && validate" class="errorForm">
+	                        	O fabricante precisa ser selecionado
+	                        </span>
+	                    </div>
+                    </div>
+                    <div class="col-lg-4"> 
+	                	<div class="form-group">
+	                    	<label>Modelo<i class="colorRequired">*</i></label>
+	                        
+						   <input class="form-control typeahead" ng-disabled="vehicleModels.length == 0 || blockFieldsModel"
+								ng-model="$parent.property.vehicle.vehicleModelName" name="model" autocomplete="off" placeholder="Cadillac XT5, Lexus NX, Audi Q5" required />
+                                
+	                        <span ng-show="vehicleForm.model.$invalid && validate" class="errorForm">
+	                        	O modelo precisa ser selecionado
+	                        </span>
+	                    </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                	<div class="col-md-4">
+                		<div class="form-group">
+                			<label>Código FIPE</label>
+							<input class="form-control" maxlength="22" autocomplete="off" required name="vehicleFipeCode"
+								ng-model="$parent.property.vehicle.vehicleCodeFipe" placeholder="000000-0" mask="999999-9"/>
+	                        		
+	                        <span ng-show="vehicleForm.vehicleFipeCode.$invalid && validate" class="errorForm">
+	                        	O código FIPE precisa ser carregado
+	                        </span>
+                		</div>
+                	</div>
+                	
+                	<div class="col-lg-4"> 
+	                	<div class="form-group">
+	                    	<label>Código RENAVAM</label>
+	                        <input class="form-control" maxlength="22" autocomplete="off"
+	                        	ng-model="$parent.property.vehicle.vehicleLicenseNumber">
+	                    </div>
+                    </div>
+                    
+                    <div class="col-lg-4"> 
+	                	<div class="form-group">
+	                    	<label>Chassi<i class="colorRequired">*</i></label>
+	                        <input class="form-control" name="vehicleChassis" required maxlength="22" autocomplete="off"
+	                        	ng-model="$parent.property.vehicle.vehicleChassis">
+	                        <span ng-show="vehicleForm.vehicleChassis.$invalid && validate" class="errorForm">
+	                        	O chassi precisa ser selecionado
+	                        </span>
+	                    </div>   
+                    </div> 
+                         
+                </div>
+                
+                <div class="row">               
+                    <div class="col-lg-4">                                    
+	                	<div class="form-group">
+	                    	<label>Observações</label>
+	                        <input class="form-control" autocomplete="off" ng-model="$parent.property.description" maxlength="200">
+	                    </div>  
+                  	</div>                                    
+            	</div>           
+        	</div>
+    	</div>    		
+</div>
+    

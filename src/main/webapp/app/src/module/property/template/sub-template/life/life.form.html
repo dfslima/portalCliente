@@ -1,0 +1,39 @@
+<div class="col-lg-12">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Dados do Grupo
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>Qtd. de Funcionários<i class="colorRequired">*</i></label>
+						<input class="form-control" name="lifeQuantity" autocomplete="off" required
+							   ng-model="$parent.property.life.lifeQuantity" ui-number-mask="0">
+						<span ng-show="lifeForm.lifeQuantity.$invalid && validate" class="errorForm">
+                        	A quantidade de funcionário precisa ser preenchido.
+						</span>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>Atividade Profissional<i class="colorRequired">*</i></label>
+						<input class="form-control" name="lifeProfessionalActivityName" autocomplete="off" maxlength="99" required
+							   ng-model="$parent.property.life.lifeProfessionalActivityName">
+
+						<span ng-show="lifeForm.lifeProfessionalActivityName.$invalid && validate" class="errorForm">
+                        	A atividade profissional precisa ser preenchido.
+						</span>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="form-group">
+						<label>Observações</label>
+						<input class="form-control" autocomplete="off" ng-model="$parent.property.description" maxlength="250">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+           
