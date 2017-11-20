@@ -12,6 +12,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
+    height: 0 !important
 }
 
 button:focus {
@@ -42,10 +43,6 @@ button:focus {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.length-bar-left {
-    width: 200px !important;
-}
-
 .dropdown-toggle:HOVER {
     background-color: rgba(0, 0, 0, 0.2) !important;
 }
@@ -64,7 +61,6 @@ button:focus {
 
 #page-wrapper {
     padding: 0 15px;
-    min-height: 568px;
     background-color: #fff;
 }
 
@@ -111,25 +107,6 @@ button:focus {
     white-space: normal;
 }
 
-.navbar-top-links .dropdown-messages,
-.navbar-top-links .dropdown-tasks,
-.navbar-top-links .dropdown-alerts {
-    width: 310px;
-    min-width: 0;
-}
-
-.navbar-top-links .dropdown-messages {
-    margin-left: 5px;
-}
-
-.navbar-top-links .dropdown-tasks {
-    margin-left: -59px;
-}
-
-.navbar-top-links .dropdown-alerts {
-    margin-left: -123px;
-}
-
 .navbar-top-links .dropdown-user {
     right: 0;
     left: auto;
@@ -144,9 +121,6 @@ button:focus {
     padding: 15px;
 }
 
-/* .sidebar ul li {
-    border-bottom: 1px solid #e7e7e7;
-} */
 
 .sidebar ul li a.active {
     background-color: #eee;
@@ -183,12 +157,6 @@ button:focus {
         position: absolute;
         width: 250px;
         margin-top: 51px;
-    }
-
-    .navbar-top-links .dropdown-messages,
-    .navbar-top-links .dropdown-tasks,
-    .navbar-top-links .dropdown-alerts {
-        margin-left: auto;
     }
 }
 
@@ -469,19 +437,6 @@ li:hover {
     cursor: pointer;
 }
 
-.container-confirmation-register_producer-form {
-    margin-top: 20px;
-    background-color: #FFFFFF;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
-    padding-top: 5px;
-    border-radius: 4px 4px 4px 4px;
-    -webkit-box-shadow: 0px 0px 28px -10px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 0px 28px -10px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 28px -10px rgba(0, 0, 0, 0.75);
-}
-
 .form-control {
     border-radius: 0 !important;
 }
@@ -613,4 +568,21 @@ li:hover {
 
 .fa-2x {
     font-size: 13pt !important;
+}
+
+.img-dash-action {
+    height: 130px;
+    width: 130px;
+    margin: 25px;
+}
+
+.img-dash-action:hover {
+    -webkit-filter: grayscale(100%); /* Safari */
+        filter: grayscale(100%);
+
+     cursor:pointer;
+}
+
+.logo-login {
+    height: 60px;
 }

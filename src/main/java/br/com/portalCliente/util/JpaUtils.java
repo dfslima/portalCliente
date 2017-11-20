@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public abstract class JpaUtils {
+public abstract class JpaUtils extends MessageUtils {
 
 	protected static Map<String, Object> params;
 	
