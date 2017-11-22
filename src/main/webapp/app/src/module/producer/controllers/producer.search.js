@@ -1,20 +1,9 @@
 app.controller('searchProducerController',
-    function ($scope, $location, $rootScope, $modal, $timeout, producerService, paginationFactory, toast) {
+    function ($scope, $location, $rootScope, $modal, $timeout,
+            producerService, paginationFactory, toast, maskFactory) {
 
     angular.extend($scope, paginationFactory);
-
-    // list producers
-    $scope.isShow = false;
-
-    $scope.statusProd = statusProducer();
-
-    $scope.statusProducer = function (value) {
-        if (value == 'REGISTERED') {
-            return 'Ativo';
-        } else {
-            return 'Pendente';
-        }
-    };
+    angular.extend($scope, maskFactory);
 
     $scope.edit = function (id) {
         $location.path('edit-producer/' + id);
@@ -25,13 +14,12 @@ app.controller('searchProducerController',
     };
 
     $scope.search = function () {
-        $scope.noResults = false;
+        $scope.isShow = false;
         $scope.itens = [];
         producerService.count($scope.name, $scope.cpf, $scope.email, $scope.status).then(function (total) {
             if ($scope.validateSize(total.count)) {
                 getList();
-            } else {
-                $scope.noResults = true;
+                 $scope.isShow = true;
             }
         });
     };
@@ -42,7 +30,6 @@ app.controller('searchProducerController',
         producerService.search($scope.name, $scope.cpf, $scope.email, $scope.status,
             $scope.firstResult, $scope.maxResults).then(function (results) {
             $scope.itens = results;
-            $scope.classColor = true;
         });
     }
 
@@ -58,7 +45,7 @@ app.controller('searchProducerController',
 
     $scope.remove = function (item) {
         var modalInstance = $modal.open({
-            templateUrl: 'app/views/producer/producer.delete.html',
+            templateUrl: 'app/src/module/producer/template/producer.delete.html',
             size: 'sm',
             resolve: {
                 producer: function () {
@@ -68,8 +55,12 @@ app.controller('searchProducerController',
             controller: 'deleteProducerController'
         });
 
-        modalInstance.result.then(function (pro) {
-            toast.open('success', 'Produtor salvo com sucesso!');
+        modalInstance.result.then(function (response) {
+            toast.open(response.type, response.msg);
+
+            if(response.type != 'danger') {
+                $scope.search();
+            }
         });
     };
 });

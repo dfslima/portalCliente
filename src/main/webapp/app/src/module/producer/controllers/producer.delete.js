@@ -1,14 +1,17 @@
 app.controller('deleteProducerController',
-    function ($scope, $modalInstance, $timeout, producer, producerService) {
+    function ($scope, $modalInstance, $timeout, producer, producerService, maskFactory) {
 
-    // Para que o modal receba os atributos do produtor
-    // e exíba-os no momento da exclusão
+    angular.extend($scope, maskFactory);
     $scope.item = producer;
 
     $scope.ok = function () {
         producerService.remove(producer).then(function () {
-            $scope.alertSuccess = [{type: "success", msg: 'Produtor removido com sucesso.'}];
-            $modalInstance.close();
+            var alert = {type: "success", msg: 'Produtor removido com sucesso'};
+            $modalInstance.close(alert);
+        },
+        function (err) {
+            var alert = {type: "danger", msg: 'Ops! Ocorreu um problema ao excluir este produtor. Tente novamente'};
+            $modalInstance.close(alert);
         });
     };
 
