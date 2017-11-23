@@ -1,0 +1,93 @@
+<div class="row" style="float:left; margin-top:35px;">
+    <div class="col-lg-12">
+        <h4 class="page-header-custom" ng-show="!showType">Cadastro de usuários</h4>
+        <h4 class="page-header-custom" ng-show="showType">Alterar dados do usuário</h4>
+    </div>
+</div>
+<form name="formUser" novalidate>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Dados do usuário</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>Nome <i class="colorRequired">*</i></label>
+                                    <input class="form-control" ng-model="user.name" ng-required="true"
+                                           placeholder="Digite seu nome">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>E-mail<i class="colorRequired">*</i></label>
+                                    <input class="form-control" type="email" name="inputEmail"
+                                           ng-model="user.login" placeholder="login@email.com" ng-required="true">
+                                </div>
+                            </div>
+
+                            <span class="error" ng-show="formUser.inputEmail.$error.email">
+								<p class="colorRequired">E-mail inválido!</p>
+							</span>
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>Senha<i class="colorRequired">*</i></label>
+                                    <input type="password" name="inputPassword" class="form-control"
+                                           ng-model="user.password" placeholder="Digite sua senha">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>Perfil</label>
+                                    <select class="form-control" ng-required="true" ng-model="user.profile"
+                                            ng-options="perfilU.value as perfilU.name for perfilU in perfilUser">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="checkbox"
+                                           ng-model="user.status"
+                                           ng-options="statusU.value as statusU.name for statusU in statusUser">
+
+                                    <label>Status</label>
+
+                                    <br />
+                                    <p></p>
+                                    <span>{{user.status ? 'Ativo' : 'Inativo'}}</span>
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <br />
+                                <span ng-hide="formUser.$valid"><i>Por favor, preencha os campos</i> obrigatórios <i class="colorRequired">*</i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-include="formAddress">
+        </div>
+
+        <div class="col-md-12">
+            <button type="submit" class="Button btn btn-primary" v-busy="isBusy" ng-click="save(formUser)"
+                    v-pressable
+                    v-busy-label="Salvando">Salvar
+            </button>
+            <button class="btn btn-default" ng-click="goBack()">Cancelar</button>
+        </div>
+</form>
+<br/>

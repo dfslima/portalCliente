@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h3 class="title centralizer">Deseja remover este usuário?</h3>
+</div>
+<div class="modal-body">
+    <ul>
+        <label>Nome: </label> {{item.name}}
+        <br />
+        <label>E-mail: </label> {{item.login}}
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">Sim</button>
+    <button class="btn btn-warning" ng-click="cancel()">Não</button>
+</div>
