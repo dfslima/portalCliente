@@ -1,0 +1,122 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-show="!login.menu" style="argin-bottom: 0; background-color:#1c92c7; border-left:solid 1px #e2e5e6">
+     <div class="navbar-header" ng-controller="appController">
+         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+             <span class="sr-only">Toggle navigation</span> 
+             <span class="icon-bar"></span> <span class="icon-bar"></span> 
+             <span class="icon-bar"></span>
+         </button>
+         <div style="margin-top: 10px; margin-left: 25px; cursor: pointer" ng-click="goHome()">
+             <img style="margin-left: 15px; height: 30px; width: auto;" class="" src="app/img/logo/logo.png" alt="logo">&nbsp;&nbsp;<span style="color: #fff">Portal Cliente</span>
+         </div> 
+     </div>
+
+     <ul class="nav navbar-top-links navbar-right">
+
+         <li>
+             <a class="color-font" href="#/home">
+                 <i class="fa fa-list"></i>&nbsp;&nbsp;
+                 Home
+             </a>
+         </li>
+
+         <li>
+             <a class="color-font" href="#/proposals">
+                 <i class="fa fa-handshake-o"></i>&nbsp;&nbsp;
+                 Proposta
+             </a>
+         </li>
+         <li>
+             <a class="color-font" href="#/customers">
+                 <i class="fa fa-address-card"></i> &nbsp;
+                 Segurado
+             </a>
+         </li>
+         <li>
+             <a class="color-font" href="#/properties/vehicle">
+                 <i class="fa fa-sitemap"></i>&nbsp;&nbsp;
+                 Ramo
+             </a>
+         </li>
+
+         <li>
+             <a class="color-font" href="#/producers">
+                 <i class="fa fa-users"></i>&nbsp;&nbsp;
+                 Produtor
+             </a>
+         </li>
+         <li>
+             <a class="color-font" href="#/insurers">
+                 <i class="fa fa-shield"></i>&nbsp;&nbsp;
+                 Seguradora
+             </a>
+         </li>
+         <li class="dropdown">
+             <a style="color: white;" class="dropdown-toggle" data-toggle="dropdown" href="">
+                 <i class="fa fa-bars"></i>
+             </a>
+             <ul class="dropdown-menu dropdown-user" ng-controller="appController">
+
+                 <li>
+                     <a href="#/edit-user/{{userAuth.id}}"><i class="fa fa-user-circle"></i>&nbsp;&nbsp;{{getNameUser()}}</a>
+                 </li>
+                 <li>
+                     <a href="#/users"><i class="fa fa-user-circle"></i>&nbsp;&nbsp;Controle de acesso</a>
+                 </li>
+                 <li>
+                     <a href="" ng-click="logout()"><i class="fa fa-sign-out fa-fw"></i>&nbsp;&nbsp;Sair</a>
+                 </li>
+             </ul>
+             <!-- /.dropdown-user -->
+         </li>
+         <!-- /.dropdown -->
+     </ul>
+     <!-- /.navbar-top-links -->
+
+     <!--<div class="navbar-default sidebar length-bar-left" role="navigation">-->
+         <!--<div class="sidebar-nav navbar-collapse">-->
+         	 <!--<p></p>-->
+             <!--<ul class="nav" id="side-menu" ng-controller="appController">-->
+                 <!--<li>-->
+                     <!--<a class="color-font" href="#/dashboard">-->
+                         <!--<i class="fa fa-list"></i>&nbsp;&nbsp;-->
+                         <!--Home-->
+                     <!--</a>-->
+                 <!--</li>-->
+                 <!---->
+                 <!--<li>-->
+                 	<!--<a class="color-font" href="#/brokerages">-->
+                 		<!--<i class="fa fa-handshake-o"></i>&nbsp;&nbsp;-->
+                 		<!--Proposta-->
+                 	<!--</a>-->
+                 <!--</li>-->
+                 <!--<li>-->
+                 	<!--<a class="color-font" href="#/customers">-->
+                 		<!--<i class="fa fa-address-card"></i> &nbsp;-->
+                 		<!--Segurado-->
+                 	<!--</a>-->
+                 <!--</li>-->
+                 <!--<li>-->
+                 	<!--<a class="color-font" href="#/producers">-->
+                 		<!--<i class="fa fa-sitemap"></i>&nbsp;&nbsp;-->
+                 		<!--Ramo-->
+                 	<!--</a>-->
+                 <!--</li>-->
+
+                 <!--<li>-->
+                     <!--<a class="color-font" href="#/producers">-->
+                         <!--<i class="fa fa-sitemap"></i>&nbsp;&nbsp;-->
+                         <!--Produtor-->
+                     <!--</a>-->
+                 <!--</li>-->
+                 <!--<li>-->
+                     <!--<a class="color-font" href="#/insurers">-->
+                         <!--<i class="fa fa-sitemap"></i>&nbsp;&nbsp;-->
+                         <!--Seguradora-->
+                     <!--</a>-->
+                 <!--</li>-->
+             <!--</ul>-->
+         <!--</div>-->
+         <!--&lt;!&ndash; /.sidebar-collapse &ndash;&gt;-->
+     <!--</div>-->
+     <!-- /.navbar-static-side -->
+ </nav>

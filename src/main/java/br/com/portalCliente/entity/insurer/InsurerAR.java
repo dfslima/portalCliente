@@ -143,7 +143,7 @@ public class InsurerAR extends JpaUtils {
         }
     }
 
-    public static List<Insurer> search(String name, String cnpj, int firstResult, int maxResults) {
+    public static List<Insurer> search(String name, String cnpj, int firstResult, int maxResults, int userId) {
 
         StringBuilder sql = new StringBuilder("SELECT DISTINCT(i) FROM Insurer i");
         Map<String, Object> params = new HashMap<>();
@@ -158,6 +158,9 @@ public class InsurerAR extends JpaUtils {
             validateSql(sql, "i.cnpj LIKE :cnpj");
             params.put("cnpj", "%" + cnpj + "%");
         }
+
+        validateSql(sql, "i.user.id = :userId");
+        params.put("userId", userId);
 
         sql.append(" ORDER BY i.corporateName");
 
@@ -178,7 +181,7 @@ public class InsurerAR extends JpaUtils {
         }
     }
 
-    public static long count(String name, String cnpj) {
+    public static long count(String name, String cnpj, int userId) {
 
         StringBuilder sql = new StringBuilder("SELECT COUNT(i) FROM Insurer i");
         Map<String, Object> params = new HashMap<String, Object>();
@@ -192,6 +195,9 @@ public class InsurerAR extends JpaUtils {
             validateSql(sql, "i.cnpj LIKE :cnpj");
             params.put("cnpj", "%" + cnpj + "%");
         }
+
+        validateSql(sql, "i.user.id = :userId");
+        params.put("userId", userId);
 
         sql.append(" ORDER BY i.corporateName");
 
@@ -209,7 +215,7 @@ public class InsurerAR extends JpaUtils {
         }
     }
 
-    public static List<Insurer> findByAutoComplete(String value, Integer brokerageId) {
+    public static List<Insurer> findByAutoComplete(String value, Integer userId) {
 
         List<Insurer> listInsurers = new ArrayList<Insurer>();
 
@@ -217,15 +223,13 @@ public class InsurerAR extends JpaUtils {
 
         params = new HashMap<String, Object>();
 
-        if (brokerageId != null && brokerageId != 0) {
-            sql = sql.append("JOIN FETCH I.insurerBrokerages IB WHERE IB.brokerage.id = :brokerageId ");
-            params.put("brokerageId", brokerageId);
-        }
-
         if (value != null && !value.isEmpty()) {
             validateWhere(sql, "(I.corporateName LIKE :value OR I.cnpj LIKE :value)");
             params.put("value", "%" + value + "%");
         }
+
+        validateSql(sql, "i.user.id = :userId");
+        params.put("userId", userId);
 
         sql.append(" ORDER BY I.corporateName");
 

@@ -1,4 +1,4 @@
-app.service('propertyService', function (Restangular, $location) {
+app.service('propertyService', function (Restangular, $location, $rootScope, userFactory) {
 
     this.search = function (propertyType, customerId, cpfCnpj, street, city,
                             equipmentModel, vehicleLicensePlate, vehicleModelName, boatName, vehicleChassis, vehicleCodeFipe, firstResult, maxResults) {
@@ -16,6 +16,7 @@ app.service('propertyService', function (Restangular, $location) {
                 boatName: boatName,
                 vehicleChassis: vehicleChassis,
                 vehicleCodeFipe: vehicleCodeFipe,
+                userId: userFactory.getUser().id,
                 firstResult: firstResult,
                 maxResults: maxResults
             }).$object;
@@ -36,12 +37,18 @@ app.service('propertyService', function (Restangular, $location) {
                 vehicleModelName: vehicleModelName,
                 boatName: boatName,
                 vehicleChassis: vehicleChassis,
-                vehicleCodeFipe: vehicleCodeFipe
+                vehicleCodeFipe: vehicleCodeFipe,
+                userId: userFactory.getUser().id
             });
     };
 
     this.findAutoComplete = function (value, type, customerId) {
-        return Restangular.all('properties/autoComplete').getList({value: value, type: type, customerId: customerId});
+        return Restangular.all('properties/autoComplete').getList({
+            value: value,
+            type: type,
+            customerId: customerId,
+            userId: userFactory.getUser().id
+        });
     };
 
     this.list = function () {

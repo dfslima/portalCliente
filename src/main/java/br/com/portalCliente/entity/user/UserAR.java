@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -143,25 +144,31 @@ public abstract class UserAR extends JpaUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static List<User> search(String name, String login, Profile profile, int brokerage, int firstResult, int maxResults) {
+    public static List<User> search(String name, String login, Profile profile, int userId, int id, int firstResult, int maxResults) {
 
         StringBuilder sql = new StringBuilder("SELECT u FROM User u");
         Map<String, Object> params = new HashMap<String, Object>();
 
         if (name != null && !name.isEmpty()) {
-            validateSql(sql, "name LIKE :name");
-            params.put("name", "%"+name+"%");
+            validateSql(sql, "u.name LIKE :name");
+            params.put("name", "%" + name + "%");
         }
 
         if (login != null && !login.isEmpty()) {
-            validateSql(sql, "login LIKE :login ");
-            params.put("login", "%"+login+"%");
+            validateSql(sql, "u.login LIKE :login ");
+            params.put("login", "%" + login + "%");
         }
 
         if (profile != null) {
-            validateSql(sql, "profile = :profile");
+            validateSql(sql, "u.profile = :profile");
             params.put("profile", profile.getValue());
         }
+
+        validateSql(sql, "u.user.id = :idUser");
+        params.put("idUser", userId);
+
+        validateSql(sql, "u.id <> :id");
+        params.put("id", id);
 
         sql.append(" ORDER BY u.name");
 
@@ -191,7 +198,7 @@ public abstract class UserAR extends JpaUtils {
      * @param profile
      * @return
      */
-    public static long count(String name, String login, Profile profile, int brokerage) {
+    public static long count(String name, String login, Profile profile, int userId, int id) {
 
         try {
 
@@ -199,19 +206,25 @@ public abstract class UserAR extends JpaUtils {
             Map<String, Object> params = new HashMap<String, Object>();
 
             if (name != null && !name.isEmpty()) {
-                validateSql(sql, "name LIKE :name");
-                params.put("name", "%"+name+"%");
+                validateSql(sql, "u.name LIKE :name");
+                params.put("name", "%" + name + "%");
             }
 
             if (login != null && !login.isEmpty()) {
-                validateSql(sql, "login LIKE :login ");
-                params.put("login", "%"+login+"%");
+                validateSql(sql, "u.login LIKE :login ");
+                params.put("login", "%" + login + "%");
             }
 
             if (profile != null) {
-                validateSql(sql, "profile = :profile");
+                validateSql(sql, "u.profile = :profile");
                 params.put("profile", profile.getValue());
             }
+
+            validateSql(sql, "u.user.id = :idUser");
+            params.put("idUser", userId);
+
+            validateSql(sql, "u.id <> :id");
+            params.put("id", id);
 
             TypedQuery<Long> query = entityManager().createQuery(sql.toString(), Long.class);
             setParams(params, query);
@@ -228,30 +241,23 @@ public abstract class UserAR extends JpaUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<User> autoComplete(String value, Profile profile, int firstResult, int maxResults, Integer... brokerage) {
+    public static List<User> autoComplete(String value, Profile profile, int firstResult, int maxResults, int userId) {
 
         StringBuilder sql = new StringBuilder("SELECT u FROM User u");
         params = new HashMap<String, Object>();
 
-        if (brokerage != null) {
-            validateSql(sql, "u.id IN (SELECT ub.user.id FROM UserBrokerage ub WHERE ub.brokerage.id IN :brokerage)");
-            List<Integer> ids = Arrays.asList(brokerage);
-            params.put("brokerage", ids);
-        }
-
         if (profile != null) {
             validateSql(sql, "profile = :profile ");
             params.put("profile", profile.getValue());
-        } else {
-            validateSql(sql, "profile <> :profile ");
-            params.put("profile", Profile.ROLE_ADMIN.getValue());
         }
-
 
         if (value != null && !value.isEmpty()) {
             validateSql(sql, "(u.name LIKE :value OR u.login LIKE :value)");
             params.put("value", "%" + value + "%");
         }
+
+        validateSql(sql, "user.user.id = :id");
+        params.put("id", userId);
 
         sql.append(" ORDER BY u.name");
         List<User> result = new ArrayList<User>();
@@ -282,7 +288,7 @@ public abstract class UserAR extends JpaUtils {
      * @param json
      * @throws PortalClienteException
      */
-    public static User save(String json) throws PortalClienteException {
+    public static String save(String json) throws PortalClienteException {
 
         User user = User.fromJson(json);
         User userValidate = User.findByLogin(user.getLogin());
@@ -300,6 +306,6 @@ public abstract class UserAR extends JpaUtils {
             user.persist();
         }
 
-        return user;
+        return user.toJson();
     }
 }

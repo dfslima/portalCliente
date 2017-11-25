@@ -1,4 +1,4 @@
-app.controller('createPropertyController', function ($route, $scope, $location, $rootScope, $window, $timeout, validationFactory,
+app.controller('createPropertyController', function ($route, $scope, $location, $rootScope, $window, $timeout, validationFactory, userFactory,
                                                      routeProperty, maskFactory, autoComplete, propertyService, customerService, toast) {
 
 
@@ -75,11 +75,14 @@ app.controller('createPropertyController', function ($route, $scope, $location, 
 
             $scope.property.status = true;
             $scope.property.customer = $scope.customer;
+            $scope.property.user = userFactory.getUser();
+
             propertyService.save($scope.property).then(function (response) {
                 delete $scope.customer;
                 $rootScope.isBusy = false;
                 toast.open('success', 'Propriedade salva com sucesso!');
                 $location.path('/properties/' + $scope.property.propertyType.toLowerCase());
+
             });
         } else {
 

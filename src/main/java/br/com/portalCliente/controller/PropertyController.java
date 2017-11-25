@@ -1,6 +1,7 @@
 package br.com.portalCliente.controller;
 
 import br.com.portalCliente.entity.property.Property;
+import br.com.portalCliente.entity.proposal.Proposal;
 import br.com.portalCliente.enumeration.PropertyType;
 import br.com.portalCliente.exception.PortalClienteException;
 import org.springframework.http.HttpHeaders;
@@ -34,11 +35,12 @@ public class PropertyController extends AbstractController {
             @RequestParam(value = "boatName", required = false) String boatName,
             @RequestParam(value = "vehicleChassis", required = false) String vehicleChassis,
             @RequestParam(value = "vehicleCodeFipe", required = false) String vehicleCodeFipe,
+            @RequestParam(value = "userId", required = false) Integer userId,
             @RequestParam(value = "firstResult", required = false, defaultValue = "1") int firstResult,
             @RequestParam(value = "maxResults", required = false, defaultValue = "10") int maxResults) {
 
         List<Property> result = Property.search(propertyType, customerId, cpfCnpj, street, city,
-                equipmentModel, vehicleLicensePlate, vehicleModelName, boatName, status, vehicleChassis, vehicleCodeFipe, firstResult, maxResults);
+                equipmentModel, vehicleLicensePlate, vehicleModelName, boatName, status, vehicleChassis, vehicleCodeFipe, firstResult, maxResults, userId);
 
         return new ResponseEntity<>(Property.toJsonArray(result, includeParam("lifeIndividuals")), setHeaders(), HttpStatus.OK);
     }
@@ -57,10 +59,11 @@ public class PropertyController extends AbstractController {
             @RequestParam(value = "vehicleModelName", required = false) String vehicleModelName,
             @RequestParam(value = "boatName", required = false) String boatName,
             @RequestParam(value = "vehicleChassis", required = false) String vehicleChassis,
-            @RequestParam(value = "vehicleCodeFipe", required = false) String vehicleCodeFipe) {
+            @RequestParam(value = "vehicleCodeFipe", required = false) String vehicleCodeFipe,
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
         Long result = Property.count(propertyType, customerId, cpfCnpj, street, city, equipmentModel, vehicleLicensePlate,
-                vehicleModelName, boatName, status, vehicleChassis, vehicleCodeFipe);
+                vehicleModelName, boatName, status, vehicleChassis, vehicleCodeFipe, userId);
 
         return new ResponseEntity<>(toJson("count", result), setHeaders(), HttpStatus.OK);
     }
@@ -71,9 +74,10 @@ public class PropertyController extends AbstractController {
     public ResponseEntity<String> listJsonAutoComplete(
             @RequestParam(value = "value", required = false) String value,
             @RequestParam(value = "type", required = false) PropertyType propertyType,
-            @RequestParam(value = "customerId", required = false) Integer customerId) {
+            @RequestParam(value = "customerId", required = false) Integer customerId,
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
-        List<Property> result = Property.findAutoComplete(value, propertyType, customerId);
+        List<Property> result = Property.findAutoComplete(value, propertyType, customerId, userId);
 
         return new ResponseEntity<>(Property.toJsonArrayAutoComplete(result, includeParam()), setHeaders(), HttpStatus.OK);
     }
@@ -136,10 +140,10 @@ public class PropertyController extends AbstractController {
             return new ResponseEntity<>(setHeaders(), HttpStatus.NOT_FOUND);
         }
 
-//        if (Policy.findByPropertyId(id)) {
-//            erro("Existe uma apólice cadastrada para esta propriedade. Não é possível deletar.");
-//            return new ResponseEntity<String>(messageToJson(), headers, HttpStatus.ACCEPTED);
-//        }
+        if (Proposal.findByPropertyId(id)) {
+            erro("Existe uma apólice cadastrada para esta propriedade. Não é possível deletar.");
+            return new ResponseEntity<String>(messageToJson(), setHeaders(), HttpStatus.ACCEPTED);
+        }
 
         property.remove();
         return new ResponseEntity<>(setHeaders(), HttpStatus.OK);

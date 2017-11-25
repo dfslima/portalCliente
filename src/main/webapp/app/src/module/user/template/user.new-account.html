@@ -1,0 +1,59 @@
+<div class="col-lg-12" style="float:left; margin-top:5%;">
+    <div class="col-lg-4 col-lg-offset-4">
+        <h2 class="page-header-custom text-center" style="color: #FFFFFF;">Criação de conta</h2>
+    </div>
+</div>
+<form name="formNewAccount" novalidate>
+    <div class="col-lg-12">
+        <div class="col-lg-4 col-lg-offset-4">
+
+            <div class="panel panel-default" style="padding: 30px;">
+                <div class="panel-heading">Dados do usuário</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Nome <i class="colorRequired">*</i></label>
+                                <input class="form-control" ng-model="user.name" ng-required="true" name="name"
+                                       placeholder="Digite seu nome">
+
+                                <span class="error" ng-show="formNewAccount.name.$invalid && validate">
+								    <p class="colorRequired">Digite seu nome</p>
+							    </span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>E-mail<i class="colorRequired">*</i></label>
+                                <input class="form-control" type="email" name="inputEmail"
+                                       ng-model="user.login" placeholder="login@email.com" ng-required="true">
+
+                                <span class="error" ng-show="formNewAccount.inputEmail.$invalid && validate">
+								    <p class="colorRequired">E-mail inválido!</p>
+							    </span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Senha<i class="colorRequired">*</i></label>
+                                <input type="password" name="passwordUser" class="form-control" ng-model="user.password" placeholder="Digite sua senha" required>
+
+                                <span class="error" ng-show="formNewAccount.passwordUser.$invalid && validate">
+								    <p class="colorRequired">Crie sua senha de acesso</p>
+							    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-offset-4">
+            <button type="submit" class="Button btn btn-warning" ng-click="save(formNewAccount)">Salvar</button>
+            <button class="btn btn-default" ng-click="goBack()">Cancelar</button>
+        </div>
+    </div>
+</form>
+<br/>

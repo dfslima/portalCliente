@@ -3,6 +3,7 @@ package br.com.portalCliente.entity.property;
 import br.com.portalCliente.entity.address.Address;
 import br.com.portalCliente.entity.customer.Customer;
 import br.com.portalCliente.entity.property.dependences.*;
+import br.com.portalCliente.entity.user.User;
 import br.com.portalCliente.enumeration.PropertyType;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -72,6 +73,10 @@ public class Property extends PropertyAR {
     @ManyToOne
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name ="USER_ID", referencedColumnName = "ID")
+    private User user;
 
     /**
      * Método para retonar o id do objeto Propriedade
@@ -378,6 +383,14 @@ public class Property extends PropertyAR {
      */
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     ///////////////////////////////////////////// Converte Json  /////////////////////////////////////////////////////////////

@@ -52,7 +52,7 @@
 
 <br/>
 
-<div class="row" ng-show="isShow">
+<div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -86,7 +86,8 @@
                         </tr>
                         </tbody>
                     </table>
-                    <div ng-include="pagination"></div>
+                    <h5 class="centralizer" ng-if="!isShow" style="color:#C0C0C0;">Não existe nenhum resultado para esta busca</h5>
+                    <div ng-include="pagination" ng-if="isShow"></div>
                 </div>
                 <!-- /.table-responsive -->
             </div>

@@ -1,6 +1,7 @@
 package br.com.portalCliente.controller;
 
 import br.com.portalCliente.entity.user.User;
+import br.com.portalCliente.exception.PortalClienteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,9 @@ public class AuthenticationController extends AbstractController {
         } catch (AuthenticationException e) {
             // Verificamos que este usuário não faz parte do Segoo
             erro("E-mail ou senha incorreto");
+            return new ResponseEntity<String>(messageToJson(), headers, HttpStatus.ACCEPTED);
+        } catch (PortalClienteException pce) {
+            erro(pce.getMessage());
             return new ResponseEntity<String>(messageToJson(), headers, HttpStatus.ACCEPTED);
         }
     }

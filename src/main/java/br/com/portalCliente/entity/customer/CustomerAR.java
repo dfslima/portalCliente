@@ -120,7 +120,7 @@ public abstract class CustomerAR extends JpaUtils {
      * @param maxResults
      * @return
      */
-    public static List<Customer> search(String name, String cpfCnpj, Integer type, int firstResult, int maxResults) {
+    public static List<Customer> search(String name, String cpfCnpj, Integer type, int firstResult, int maxResults, Integer userId) {
 
         StringBuilder sql = new StringBuilder("SELECT DISTINCT(c) FROM Customer c");
         Map<String, Object> params = new HashMap<String, Object>();
@@ -138,6 +138,11 @@ public abstract class CustomerAR extends JpaUtils {
         if (type != null) {
             validateSql(sql, "c.type = :type");
             params.put("type", type);
+        }
+
+        if (userId != null) {
+            validateSql(sql, "c.user.id = :userId");
+            params.put("userId", userId);
         }
 
         sql.append(" ORDER BY IFNULL(c.name, c.corporateName)");
@@ -167,7 +172,7 @@ public abstract class CustomerAR extends JpaUtils {
      * @param type
      * @return
      */
-    public static long count(String name, String cpfCnpj, Integer type, Date startCreateDate, Date endCreateDate) {
+    public static long count(String name, String cpfCnpj, Integer type, Date startCreateDate, Date endCreateDate, Integer userId) {
 
         try {
 
@@ -195,6 +200,11 @@ public abstract class CustomerAR extends JpaUtils {
                 params.put("endCreateDate", endCreateDate);
             }
 
+            if (userId != null) {
+                validateSql(sql, "c.user.id = :userId");
+                params.put("userId", userId);
+            }
+
             TypedQuery<Long> query = entityManager().createQuery(sql.toString(), Long.class);
             setParams(params, query);
 
@@ -212,31 +222,31 @@ public abstract class CustomerAR extends JpaUtils {
      * @param value
      * @return
      */
-    public static List<Customer> findAutoComplete(String value) {
+    public static List<Customer> findAutoComplete(String value, int userId) {
 
-        String sql = "Select c From Customer c ";
-        String byName = "Where c.name LIKE :value";
-        String byCorportareName = "Where c.corporateName LIKE :value";
-        String byCpf = "Where c.cpfCnpj LIKE :value";
+        String sql = "Select c From Customer c WHERE c.user.id = :userId ";
+        String byName = "AND c.name LIKE :value";
+        String byCorportareName = "AND c.corporateName LIKE :value";
+        String byCpf = "AND c.cpfCnpj LIKE :value";
 
 
         List<Customer> result = new ArrayList<>();
 
         if (value == null || value.isEmpty()) {
-            return entityManager().createQuery(sql, Customer.class).setMaxResults(10).getResultList();
+            return entityManager().createQuery(sql, Customer.class).setParameter("userId", userId).setMaxResults(10).getResultList();
         }
 
         result = entityManager().createQuery(sql.concat(byName), Customer.class)
-                .setParameter("value", '%' + value + '%').setMaxResults(10).getResultList();
+                .setParameter("value", '%' + value + '%').setParameter("userId", userId).setMaxResults(10).getResultList();
 
         if (result.size() == 0) {
             result = entityManager().createQuery(sql.concat(byCorportareName), Customer.class)
-                    .setParameter("value", '%' + value + '%').setMaxResults(10).getResultList();
+                    .setParameter("value", '%' + value + '%').setParameter("userId", userId).setMaxResults(10).getResultList();
         }
 
         if (result.size() == 0) {
             result = entityManager().createQuery(sql.concat(byCpf), Customer.class)
-                    .setParameter("value", '%' + value + '%').setMaxResults(10).getResultList();
+                    .setParameter("value", '%' + value + '%').setParameter("userId", userId).setMaxResults(10).getResultList();
         }
 
         return result;

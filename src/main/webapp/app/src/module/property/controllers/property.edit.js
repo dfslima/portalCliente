@@ -1,4 +1,4 @@
-app.controller('editPropertyController', function ($scope, Restangular, $location, $rootScope, $window,
+app.controller('editPropertyController', function ($scope, Restangular, $location, $rootScope, $window, userFactory,
                routeProperty, propertyFactory, autoComplete, maskFactory, propertyService, property, toast, customerService) {
 
     angular.extend($scope, autoComplete);
@@ -20,8 +20,25 @@ app.controller('editPropertyController', function ($scope, Restangular, $locatio
 
     $scope.customer = $scope.property.customer;
     $scope.routeProperty = routeProperty.form($scope.property.propertyType, 1);
+    $scope.routeProperty.titulo = 'Alterar dados do ramo';
     $scope.states = states();
     $scope.hideSelect = true;
+
+    $scope.loadSelecteds = function() {
+        $scope.condominiumTypes = condominiumType();
+        $scope.condominiumSubTypes = condominiumSubType();
+
+        $scope.homeBuildingTypes = homeBuildingType();
+        $scope.homeTypes = homeType();
+        $scope.homeUseTypes = homeUseType();
+
+        $scope.vehicleTypes = vehicleType();
+
+        $scope.vesselTypes = vesselTypes();
+
+        $scope.businessZones = businessZone();
+    };
+    $scope.loadSelecteds();
 
     $scope.onSelectCustomer = function ($item) {
         customerService.get($item.id).then(function (data) {
@@ -46,6 +63,8 @@ app.controller('editPropertyController', function ($scope, Restangular, $locatio
             }
 
             $scope.property.customer = $scope.customer;
+            $scope.property.user = userFactory.getUser();
+
             propertyService.edit($scope.property).then(function (response) {
 
                 if (response != undefined) {

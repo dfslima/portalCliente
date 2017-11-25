@@ -1,7 +1,6 @@
 package br.com.portalCliente.entity.producer;
 
 import br.com.portalCliente.entity.user.UserAR;
-import br.com.portalCliente.enumeration.StatusProducer;
 import br.com.portalCliente.util.JpaUtils;
 import br.com.portalCliente.util.PaginationUtils;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -16,10 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Configurable
@@ -123,77 +119,33 @@ public class ProducerAR extends JpaUtils {
      * @param name
      * @param cpf
      * @param email
-     * @param status
-     * @param brokerage
      * @param firstResult
      * @param maxResults
      * @return
      */
-    public static List<Producer> search(String name, String cpf, String email, StatusProducer status,
-                                        int brokerage, int firstResult, int maxResults) {
+    public static List<Producer> search(String name, String cpf, String email, int firstResult, int maxResults, int userId) {
 
-        String sql = "SELECT p FROM Producer p ";
+        StringBuilder sql = new StringBuilder("SELECT p FROM Producer p");
+        Map<String, Object> params = new HashMap<String, Object>();
 
-        if (name != null && !name.isEmpty()) {
-            if (brokerage > 0) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("name LIKE :name ");
+        if (name != null && name.isEmpty()) {
+            validateSql(sql, "p.name = :name");
+            params.put("name", "%" + name + "%");
         }
 
-        if (cpf != null && !cpf.isEmpty()) {
-            if (brokerage > 0 || name != null) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("cpf LIKE :cpf ");
-
+        if (cpf != null && cpf.isEmpty()) {
+            validateSql(sql, "p.cpf = :cpf");
+            params.put("cpf", "%" + cpf + "%");
         }
 
-        if (email != null && !email.isEmpty()) {
-            if (brokerage > 0 || name != null || cpf != null) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("email LIKE :email ");
-        }
+        validateSql(sql, "p.user.id = :userId");
+        params.put("userId", userId);
 
-        if (status != null) {
-            if (brokerage > 0 || name != null || cpf != null || email != null) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("status = :status ");
-        }
-
-        sql = sql.concat("ORDER BY name");
+        sql.append(" ORDER BY name");
 
         try {
-            TypedQuery<Producer> query = entityManager().createQuery(sql, Producer.class);
-
-            if (name != null && !name.isEmpty()) {
-                query.setParameter("name", "%" + name + "%");
-            }
-            if (cpf != null && !cpf.isEmpty()) {
-                query.setParameter("cpf", "%" + cpf + "%");
-            }
-
-            if (email != null && !email.isEmpty()) {
-                query.setParameter("email", "%" + email + "%");
-            }
-
-            if (status != null) {
-                query.setParameter("status", status.getValue());
-            }
-
-            if (brokerage > 0) {
-                query.setParameter("brokerage", brokerage);
-            }
+            TypedQuery<Producer> query = entityManager().createQuery(sql.toString(), Producer.class);
+            setParams(params, query);
 
             return query.setFirstResult(PaginationUtils.calculateFirstResultQuery(firstResult, maxResults))
                     .setMaxResults(maxResults).getResultList();
@@ -213,74 +165,30 @@ public class ProducerAR extends JpaUtils {
      * @param name
      * @param cpf
      * @param email
-     * @param status
-     * @param brokerage
      * @return
      */
-    public static long count(String name, String cpf, String email, StatusProducer status, int brokerage) {
+    public static long count(String name, String cpf, String email, int userId) {
 
-        String sql = "Select count(*) FROM Producer p ";
-
-        if (name != null && !name.isEmpty()) {
-            if (brokerage > 0) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("name LIKE :name ");
-        }
-
-        if (cpf != null && !cpf.isEmpty()) {
-            if (brokerage > 0 || name != null) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("cpf LIKE :cpf ");
-
-        }
-
-        if (email != null && !email.isEmpty()) {
-            if (brokerage > 0 || name != null || cpf != null) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("email LIKE :email ");
-        }
-
-        if (status != null) {
-            if (brokerage > 0 || name != null || cpf != null || email != null) {
-                sql = sql.concat("AND ");
-            } else {
-                sql = sql.concat("WHERE ");
-            }
-            sql = sql.concat("status = :status ");
-        }
+        StringBuilder sql = new StringBuilder("SELECT COUNT(p.id) FROM Producer p");
+        Map<String, Object> params = new HashMap<String, Object>();
 
         try {
 
-            TypedQuery<Long> query = entityManager().createQuery(sql, Long.class);
-
-            if (name != null && !name.isEmpty()) {
-                query.setParameter("name", "%" + name + "%");
+            if (name != null && name.isEmpty()) {
+                validateSql(sql, "p.name = :name");
+                params.put("name", "%" + name + "%");
             }
 
-            if (cpf != null && !cpf.isEmpty()) {
-                query.setParameter("cpf", "%" + cpf + "%");
+            if (cpf != null && cpf.isEmpty()) {
+                validateSql(sql, "p.cpf = :cpf");
+                params.put("cpf", "%" + cpf + "%");
             }
 
-            if (email != null && !email.isEmpty()) {
-                query.setParameter("email", "%" + email + "%");
-            }
+            validateSql(sql, "p.user.id = :userId");
+            params.put("userId", userId);
 
-            if (status != null) {
-                query.setParameter("status", status.getValue());
-            }
-
-            if (brokerage > 0) {
-                query.setParameter("brokerage", brokerage);
-            }
+            TypedQuery<Long> query = entityManager().createQuery(sql.toString(), Long.class);
+            setParams(params, query);
 
             return query.getSingleResult();
 
@@ -292,10 +200,9 @@ public class ProducerAR extends JpaUtils {
         }
     }
 
-    public static List<Producer> findByAutoComplete(String name, Integer brokerageId) {
+    public static List<Producer> findByAutoComplete(String name, Integer userId) {
 
         List<Producer> listProducers = new ArrayList<Producer>();
-
         StringBuilder sql = new StringBuilder("SELECT p FROM Producer p ");
 
         params = new HashMap<String, Object>();
@@ -304,6 +211,9 @@ public class ProducerAR extends JpaUtils {
             validateWhere(sql, "(p.name LIKE :value OR p.cpf LIKE :value)");
             params.put("value", "%" + name + "%");
         }
+
+        validateSql(sql, "p.user.id = :userId");
+        params.put("userId", userId);
 
         sql.append(" ORDER BY p.name");
 

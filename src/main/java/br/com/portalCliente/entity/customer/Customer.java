@@ -3,6 +3,7 @@ package br.com.portalCliente.entity.customer;
 import br.com.portalCliente.entity.address.Address;
 import br.com.portalCliente.entity.property.Property;
 import br.com.portalCliente.entity.proposal.Proposal;
+import br.com.portalCliente.entity.user.User;
 import br.com.portalCliente.util.dateUtilities.PortalClienteDateTransformer;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -97,12 +98,16 @@ public class Customer extends CustomerAR {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
     private Address address;
-//
+
 	@OneToMany(cascade=CascadeType.ALL,  mappedBy="customer")
 	private List<Property> properties;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private List<Proposal> proposals;
+
+    @ManyToOne
+    @JoinColumn(name ="USER_ID", referencedColumnName = "ID")
+    private User user;
 
     // OBSERVAÇÃO
     @Column(name = "OBSERVATION", length = 500)
@@ -500,6 +505,13 @@ public class Customer extends CustomerAR {
         this.observation = observation;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     ///////////////////////////////////////////// Converte Json  /////////////////////////////////////////////////////////////
 

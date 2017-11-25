@@ -1,4 +1,4 @@
-app.factory('userFactory', function(){
+app.factory('userFactory', function($rootScope) {
 
 	var userFactory = {};
 
@@ -19,9 +19,19 @@ app.factory('userFactory', function(){
         if (status !== undefined) {
             if (status) {
                 return 'Ativo';
-            }else {
+            } else {
                 return 'Inativo';
             }
+        }
+    };
+
+    userFactory.getUser = function () {
+
+        if ($rootScope.userAuth.user != undefined) {
+            return $rootScope.userAuth.user;
+        }
+        else {
+            return $rootScope.userAuth;
         }
     };
 

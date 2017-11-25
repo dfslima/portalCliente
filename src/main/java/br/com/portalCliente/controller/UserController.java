@@ -31,11 +31,12 @@ public class UserController extends AbstractController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "login", required = false) String login,
             @RequestParam(value = "profile", required = false) Profile profile,
-            @RequestParam(value = "brokerage", required = false, defaultValue = "0") int brokerage,
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "firstResult", required = false, defaultValue = "1") int firstResult,
             @RequestParam(value = "maxResults", required = false, defaultValue = "10") int maxResults) {
 
-        List<User> result = User.search(name, login, profile, brokerage, firstResult, maxResults);
+        List<User> result = User.search(name, login, profile, userId, id, firstResult, maxResults);
         return new ResponseEntity<String>(User.toJsonArray(result,
                 includeParam("userBrokerages"), excludeParam()), setHeaders(), HttpStatus.OK);
     }
@@ -45,9 +46,11 @@ public class UserController extends AbstractController {
     public ResponseEntity<String> count(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "login", required = false) String login,
-            @RequestParam(value = "profile", required = false) Profile profile) {
+            @RequestParam(value = "profile", required = false) Profile profile,
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "id", required = false) Integer id) {
 
-        Long result = User.count(name, login, profile, 0);
+        Long result = User.count(name, login, profile, userId, id);
         return new ResponseEntity<String>(toJson("count", result), setHeaders(), HttpStatus.OK);
     }
 
@@ -58,9 +61,9 @@ public class UserController extends AbstractController {
             @RequestParam(value = "profile", required = false) Profile profile,
             @RequestParam(value = "firstResult", required = false, defaultValue = "1") int firstResult,
             @RequestParam(value = "maxResults", required = false, defaultValue = "10") int maxResults,
-            @RequestParam(value = "brokerage", required = false) Integer... brokerage) {
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
-        List<User> result = User.autoComplete(value, profile, firstResult, maxResults, brokerage);
+        List<User> result = User.autoComplete(value, profile, firstResult, maxResults, userId);
 
         return new ResponseEntity<String>(User.toJsonArray(result), setHeaders(), HttpStatus.OK);
     }
@@ -104,8 +107,7 @@ public class UserController extends AbstractController {
             @RequestBody String json, UriComponentsBuilder uriBuilder) {
 
         try {
-            User.save(json);
-            return new ResponseEntity<String>(setHeaders(), HttpStatus.CREATED);
+            return new ResponseEntity<String>(User.save(json), setHeaders(), HttpStatus.CREATED);
 
         } catch (PortalClienteException ue) {
             erro(ue.getMessage());

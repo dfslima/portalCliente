@@ -1,8 +1,14 @@
-app.service('customerService', function (Restangular) {
+app.service('customerService', function (Restangular, $rootScope, userFactory) {
 
     this.search = function (name, cpfCnpj, type, firstResult, maxResults) {
-        return Restangular.all('customers').getList(
-            {name: name, cpfCnpj: cpfCnpj, type: type, firstResult: firstResult, maxResults: maxResults}).$object;
+        return Restangular.all('customers').getList({
+            name: name,
+            cpfCnpj: cpfCnpj,
+            type: type,
+            userId: userFactory.getUser().id,
+            firstResult: firstResult,
+            maxResults: maxResults
+        });
     };
 
     this.count = function (name, cpfCnpj, type, startCreateDate, endCreateDate) {
@@ -10,13 +16,14 @@ app.service('customerService', function (Restangular) {
             name: name,
             cpfCnpj: cpfCnpj,
             type: type,
+            userId: userFactory.getUser().id,
             startCreateDate: startCreateDate,
             endCreateDate: endCreateDate
         });
     };
 
     this.findAutoComplete = function (param) {
-        return Restangular.all('customers/autoComplete').getList({param:param});
+        return Restangular.all('customers/autoComplete').getList({param: param, userId: userFactory.getUser().id});
     };
 
     this.get = function (id) {

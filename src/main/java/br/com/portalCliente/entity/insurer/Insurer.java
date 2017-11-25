@@ -1,6 +1,7 @@
 package br.com.portalCliente.entity.insurer;
 
 import br.com.portalCliente.entity.address.Address;
+import br.com.portalCliente.entity.user.User;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 
@@ -58,6 +59,10 @@ public class Insurer extends InsurerAR {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_ADDRESS", referencedColumnName = "ID")
     private Address address;
+
+    @ManyToOne
+    @JoinColumn(name ="USER_ID", referencedColumnName = "ID")
+    private User user;
 
     /**
      * Método para retonar o id do objeto Seguradora
@@ -243,6 +248,14 @@ public class Insurer extends InsurerAR {
      */
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     ///////////////////////////////////////////// Converte Json  /////////////////////////////////////////////////////////////

@@ -54,9 +54,12 @@
 								<td class="leftAlign">{{item.contact}}</td>
 								<td class="centralizer">{{maskPhone(item.phone)}}</td>
 								<td class="centralizer">
-									<a href="" class="btn btn-info btn-xs" ng-click="edit(item.id)" tooltip="Visualizar">
-										<span class="fa fa-fw fa-search"></span>
-									</a>								
+									<a href="" ng-click="edit(item.id)" tooltip="Editar">
+										<span class="fa fa-fw fa-edit fa-2x"></span>
+									</a>
+									<a href="" ng-click="remove(item)" tooltip="Excluir">
+										<span class="fa fa-trash-o fa-2x"></span>
+									</a>
 								</td>
 							</tr>
 						</tbody>

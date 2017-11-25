@@ -1,5 +1,5 @@
 app.controller('editProducerController',
-    function ($scope, $location, $rootScope, $timeout, producer, producerService) {
+    function ($scope, $location, $rootScope, $timeout, producer, producerService, userFactory) {
 
     $scope.isVisible = true;
     $scope.genres = genreForSelected();
@@ -12,7 +12,7 @@ app.controller('editProducerController',
 
     $scope.producer = producer;
     $scope.titlePage = 'Alterar dados do produtor';
-    $scope.formAddress = 'app/views/address/addressForm.html';
+    $scope.formAddress = 'app/src/module/address/address.form.html';
     $scope.states = states();
 
     $scope.save = function (producerForm) {
@@ -21,7 +21,9 @@ app.controller('editProducerController',
             $scope.producer.address = $scope.address;
         }
 
+        $scope.producer.user = userFactory.getUser();
         $rootScope.isBusy = true;
+
         producerService.edit($scope.producer).then(function () {
             $rootScope.isBusy = false;
             $location.path('/producers');

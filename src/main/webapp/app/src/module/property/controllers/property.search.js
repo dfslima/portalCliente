@@ -131,7 +131,7 @@ app.controller('searchPropertyController', function ($route, $scope, $location, 
                 }else {
                     $rootScope.isBusy = false;
                     toast.open('success', 'Ramo removido com sucesso!');
-                    $location.path('/properties/' +$scope.property.propertyType.toLowerCase());
+                    $scope.search();
                 }
             });
         });

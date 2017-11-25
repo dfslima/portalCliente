@@ -4,10 +4,7 @@ app.service('authHelper', function($rootScope, $location, $window) {
 
 		if (localStorage.getItem('userAuth') != undefined) {
 			$rootScope.userAuth = angular.fromJson(localStorage.getItem('userAuth'));
-			$rootScope.menuHTML = 'app/views/menu/menuDashboard.html';
-		}else {
-			if(!checkRoute(config))
-				$location.path('/login');
+			$rootScope.menuHTML = 'app/src/menu.html';
 		}
 
 		return config || q.when(config);

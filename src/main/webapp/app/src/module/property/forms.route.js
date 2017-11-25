@@ -20,7 +20,7 @@ function formsProperties(value, type) {
             return {
                 titulo: "Cadastro de Empresa",
                 template: "app/src/module/property/template/sub-template/company/company.form.html",
-                address: "app/views/address/addressForm.html",
+                address: "app/src/module/address/address.form.html",
                 type: value
             };
 
@@ -53,7 +53,7 @@ function formsProperties(value, type) {
             return {
                 titulo: "Cadastro de Residência",
                 template: "app/src/module/property/template/sub-template/residence/residence.form.html",
-                address: "app/views/address/addressForm.html",
+                address: "app/src/module/address/address.form.html",
                 type: value
             };
 

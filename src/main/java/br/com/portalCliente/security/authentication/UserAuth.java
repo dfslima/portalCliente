@@ -22,9 +22,9 @@ public class UserAuth implements GrantedAuthority, Serializable {
     private String password;
     private Integer profile;
     private boolean status;
-    private Date lastLogin;
 
-    public UserAuth() {}
+    public UserAuth() {
+    }
 
     public UserAuth(User user) {
         this.id = user.getId();
@@ -33,7 +33,6 @@ public class UserAuth implements GrantedAuthority, Serializable {
         this.profile = user.getProfile().getValue();
         this.status = user.isStatus();
         this.password = user.getPassword();
-        this.lastLogin = user.getLastLogin();
     }
 
     public Integer getId() {
@@ -82,14 +81,6 @@ public class UserAuth implements GrantedAuthority, Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public Date getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(Date lastLogin) {
-        this.lastLogin = lastLogin;
     }
 
     @Override

@@ -6,36 +6,42 @@ app.controller('searchCustomerController', function ($scope, $location, $rootSco
 
     $scope.isShow = true;
 
-    $scope.edit = function(id) {
-        $location.path('/edit-customer/'+id);
+    $scope.edit = function (id) {
+        $location.path('/edit-customer/' + id);
     };
 
-    $scope.search = function() {
+    $scope.search = function () {
         $rootScope.isBusy = true;
-        customerService.count($scope.nameCustomer, $scope.cpfCnpjCustomer, $scope.typeCustomer, null, null).then(function(total) {
-            if($scope.validateSize(total.count)){
-                getList();
-                $rootScope.isBusy = false;
-            }else{
-                $rootScope.isBusy = false;
-                $scope.isShow = false;
-            }
+        $scope.itens = [];
+        customerService.count($scope.nameCustomer, $scope.cpfCnpjCustomer, $scope.typeCustomer, null, null)
+            .then(function (total) {
+
+                if ($scope.validateSize(total.count)) {
+                    getList();
+                    $rootScope.isBusy = false;
+
+                } else {
+                    $rootScope.isBusy = false;
+                    $scope.isShow = false;
+                }
         });
     };
 
     function getList() {
-        $scope.itens = customerService.search($scope.nameCustomer, $scope.cpfCnpjCustomer,
-            $scope.typeCustomer, $scope.firstResult, $scope.maxResults);
+        customerService.search($scope.nameCustomer, $scope.cpfCnpjCustomer,
+            $scope.typeCustomer, $scope.firstResult, $scope.maxResults).then(function (response) {
+            $scope.itens = response;
+        });
     }
 
     $scope.search();
 
-    $scope.clear = function() {
+    $scope.clear = function () {
         $scope.nameCustomer = $scope.cpfCnpjCustomer = $scope.typeCustomer = undefined;
         getList();
     };
 
-    $scope.pageChanged = function(value) {
+    $scope.pageChanged = function (value) {
         $scope.firstResult = value;
         $scope.search();
     };

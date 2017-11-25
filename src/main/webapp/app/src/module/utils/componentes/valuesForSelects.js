@@ -140,10 +140,8 @@ function statusProducer() {
 
 function profileUser() {
     return [
-        {value: 'ROLE_SEGOO', name: 'Segoo User'},
         {value: 'ROLE_ADMIN', name: 'Administrador'},
-        {value: 'ROLE_USER', name: 'Usuário'},
-        {value: 'ROLE_INCIDENT', name: 'Sinistro'}
+        {value: 'ROLE_USER', name: 'Usuário'}
     ];
 };
 

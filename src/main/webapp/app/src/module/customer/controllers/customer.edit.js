@@ -1,6 +1,6 @@
-app.controller('editCustomerController', function ($scope, $location, $rootScope, $timeout, $window,
+app.controller('editCustomerController', function ($scope, $location, $rootScope, $timeout, $window, userFactory,
                                                    maskFactory, validationFactory, toast, customer, customerService) {
-
+userFactory
     angular.extend($scope, validationFactory);
 
     $scope.showType = true;
@@ -19,7 +19,7 @@ app.controller('editCustomerController', function ($scope, $location, $rootScope
 
     var pf = 'app/src/module/customer/template/customer.pf.html';
     var pj = 'app/src/module/customer/template/customer.pj.html';
-    $scope.formAddress = 'app/views/address/addressForm.html';
+    $scope.formAddress = 'app/src/module/address/address.form.html';
 
     $scope.type = customer.type;
 
@@ -63,6 +63,8 @@ app.controller('editCustomerController', function ($scope, $location, $rootScope
             $scope.customer.cpfCnpj = $scope.customer.cpfCnpj.replace(/\./g, "").replace("/", "").replace("-", "");
 
             $rootScope.isBusy = true;
+            $scope.customer.user = userFactory.getUser();
+
             customerService.edit($scope.customer).then(function (response) {
 
                 $rootScope.isBusy = false;

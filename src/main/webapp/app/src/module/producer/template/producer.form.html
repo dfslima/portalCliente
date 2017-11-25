@@ -31,7 +31,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>CPF<i class="colorRequired">*</i></label>
-                                        <input class="form-control" name="cpf" ng-model="producer.cpf" v-cpfcnpj placeholder="000.000.000-00"
+                                        <input class="form-control" name="cpf" ng-model="producer.cpf" v-cpfcnpj placeholder="000.000.000-00" mask="99.999.999-99"
                                                onkeypress="return onlyNumber(event)" ng-minlength="11" required/>
 
                                         <span ng-show="producerForm.cpf.$invalid && validate" class="errorForm">
@@ -106,7 +106,7 @@
                     <button class="btn btn-primary" ng-disabled="isBusy" v-busy="isBusy" v-pressable
                             v-busy-label="Salvando, aguarde..." ng-click="save(producerForm)">Salvar
                     </button>
-                    <!-- <button class="btn btn-default" ng-click="goBack()">Cancelar</button> -->
+                     <button class="btn btn-default" ng-click="goBack()">Cancelar</button>
                 </div>
             </div>
 

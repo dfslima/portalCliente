@@ -1,4 +1,4 @@
-app.controller('createCustomerController', function ($scope, $location, $rootScope, $timeout, $window, maskFactory, validationFactory, customerService, toast) {
+app.controller('createCustomerController', function ($scope, $location, $rootScope, $timeout, $window, maskFactory, validationFactory, customerService, toast, userFactory) {
 
     angular.extend($scope, validationFactory);
 
@@ -13,7 +13,7 @@ app.controller('createCustomerController', function ($scope, $location, $rootSco
 
     var pf = 'app/src/module/customer/template/customer.pf.html';
     var pj = 'app/src/module/customer/template/customer.pj.html';
-    $scope.formAddress = 'app/views/address/addressForm.html';
+    $scope.formAddress = 'app/src/module/address/address.form.html';
 
     $scope.type = 1;
 
@@ -50,8 +50,9 @@ app.controller('createCustomerController', function ($scope, $location, $rootSco
             }
 
             $scope.customer.type = $scope.type;
-
             $rootScope.isBusy = true;
+            $scope.customer.user = userFactory.getUser();
+
             customerService.save($scope.customer).then(function (value) {
                 $rootScope.isBusy = false;
                 toast.open('success', 'Cliente salvo com sucesso.');

@@ -19,10 +19,11 @@ public class InsurerController extends AbstractController {
     public ResponseEntity<String> listJson(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cnpj", required = false) String cnpj,
+            @RequestParam(value = "userId", required = false) Integer userId,
             @RequestParam(value = "firstResult", required = false, defaultValue = "1") int firstResult,
             @RequestParam(value = "maxResults", required = false, defaultValue = "10") int maxResults) {
 
-        List<Insurer> result = Insurer.search(name, cnpj, firstResult, maxResults);
+        List<Insurer> result = Insurer.search(name, cnpj, firstResult, maxResults, userId);
 
         return new ResponseEntity<String>(Insurer.toJsonArray(result, includeParam(""), excludeParam("")), setHeaders(), HttpStatus.OK);
     }
@@ -31,9 +32,10 @@ public class InsurerController extends AbstractController {
     @ResponseBody
     public ResponseEntity<String> count(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "cnpj", required = false) String cnpj) {
+            @RequestParam(value = "cnpj", required = false) String cnpj,
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
-        Long result = Insurer.count(name, cnpj);
+        Long result = Insurer.count(name, cnpj, userId);
 
         return new ResponseEntity<String>(toJson("count", result), setHeaders(), HttpStatus.OK);
     }
@@ -42,9 +44,9 @@ public class InsurerController extends AbstractController {
     @ResponseBody
     public ResponseEntity<String> loadInsurerJson(
             @RequestParam(value = "value", required = false) String value,
-            @RequestParam(value = "brokerageId", required = false) Integer brokerageId) {
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
-        List<Insurer> result = Insurer.findByAutoComplete(value, brokerageId);
+        List<Insurer> result = Insurer.findByAutoComplete(value, userId);
 
         return new ResponseEntity<String>(Insurer.toJsonArray(result, includeParam(),
                 excludeParam()), setHeaders(), HttpStatus.OK);

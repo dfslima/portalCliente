@@ -136,7 +136,7 @@ public abstract class PropertyAR extends JpaUtils {
      */
     public static long count(PropertyType propertyType, Integer customerId, String cpfCnpj, String street,
                              String city, String equipmentModel, String vehicleLicensePlate, String vehicleModelName,
-                             String boatName, boolean status, String vehicleChassis, String vehicleCodeFipe) {
+                             String boatName, boolean status, String vehicleChassis, String vehicleCodeFipe, int userId) {
 
         try {
 
@@ -185,6 +185,8 @@ public abstract class PropertyAR extends JpaUtils {
                 predicates.add(criteriaBuilder.like(root.get("vehicle").<String>get("vehicleCodeFipe"), "%" + vehicleCodeFipe + "%"));
             }
 
+            predicates.add(criteriaBuilder.equal(root.get("user").<Integer>get("id"), userId));
+
             CriteriaQuery<Long> criteriaCount = criteriaBuilder.createQuery(Long.class);
             criteriaCount.select(criteriaBuilder.count(criteriaCount.from(Property.class)));
             entityManager().createQuery(criteriaCount);
@@ -220,7 +222,7 @@ public abstract class PropertyAR extends JpaUtils {
     public static List<Property> search(PropertyType propertyType, Integer customerId, String cpfCnpj,
                                         String street, String city, String equipmentModel, String vehicleLicensePlate,
                                         String vehicleModelName, String boatName, boolean status, String vehicleChassis, String vehicleCodeFipe,
-                                        int firstResult, int maxResults) {
+                                        int firstResult, int maxResults, int userId) {
 
         CriteriaBuilder criteriaBuilder = criteriaBuilder();
 
@@ -267,6 +269,8 @@ public abstract class PropertyAR extends JpaUtils {
             predicates.add(criteriaBuilder.like(root.get("vehicle").<String>get("vehicleCodeFipe"), "%" + vehicleCodeFipe + "%"));
         }
 
+        predicates.add(criteriaBuilder.equal(root.get("user").<Integer>get("id"), userId));
+
         try {
             criteria.where(predicates.toArray(new Predicate[]{}));
             criteria.orderBy(criteriaBuilder.desc(root.get("id")));
@@ -290,7 +294,7 @@ public abstract class PropertyAR extends JpaUtils {
      * @param customerId
      * @return
      */
-    public static List<Property> findAutoComplete(String value, PropertyType propertyType, Integer customerId) {
+    public static List<Property> findAutoComplete(String value, PropertyType propertyType, Integer customerId, int userId) {
 
         StringBuilder sql = new StringBuilder("SELECT P FROM Property P");
         params = new HashMap<>();
@@ -302,6 +306,9 @@ public abstract class PropertyAR extends JpaUtils {
             validateSql(sql, "P.customer.id = :customerId");
             params.put("customerId", customerId);
         }
+
+        validateSql(sql, "p.user.id = :userId");
+        params.put("userId", userId);
 
         String sqlTemp = sql.toString();
 
@@ -515,7 +522,7 @@ public abstract class PropertyAR extends JpaUtils {
 
             List<Property> listProperty = query.getResultList();
 
-            return (listProperty.size() > 0) ? true : false;
+            return listProperty.size() > 0;
 
         } catch (EmptyResultDataAccessException e) {
             return false;

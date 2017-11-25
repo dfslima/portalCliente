@@ -1,6 +1,7 @@
 package br.com.portalCliente.entity.producer;
 
 import br.com.portalCliente.entity.address.Address;
+import br.com.portalCliente.entity.user.User;
 import br.com.portalCliente.util.dateUtilities.PortalClienteDateTransformer;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -57,6 +58,10 @@ public class Producer extends ProducerAR {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
     private Address address;
+
+    @ManyToOne
+    @JoinColumn(name ="USER_ID", referencedColumnName = "ID")
+    private User user;
 
     /**
      * Método para retonar o id do objeto Produtor
@@ -274,6 +279,13 @@ public class Producer extends ProducerAR {
         this.address = address;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     ///////////////////////////////////////////// Converte Json  ///////////////////////////////////////////////////////
 

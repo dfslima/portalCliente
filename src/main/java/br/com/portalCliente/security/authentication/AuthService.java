@@ -1,6 +1,7 @@
 package br.com.portalCliente.security.authentication;
 
 import br.com.portalCliente.entity.user.User;
+import br.com.portalCliente.exception.PortalClienteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,36 +23,20 @@ public class AuthService {
     private UserAuth userAuth;
     private String USER = "user";
 
-    public User authentication(UserAuth userAuth, boolean product) throws AuthenticationException {
+    public User authentication(UserAuth userAuth, boolean product) throws AuthenticationException, PortalClienteException {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userAuth.getLogin(), userAuth.getPassword());
 
         Authentication authentication = authManager.authenticate(authenticationToken);
         userAuth = (UserAuth) authentication.getDetails();
-
         User user = User.find(userAuth.getId());
-        user.setLastLogin(new Date());
-        user.merge();
+
+        if (!user.isStatus()) {
+            throw new PortalClienteException("Sua conta está inativa. Entre em contato com o administrador");
+        }
 
         return user;
-    }
-
-    public boolean validateUser() {
-
-        User user = User.findByLogin(userAuth.getLogin());
-        boolean validate = false;
-        if (user != null) {
-            String password = userAuth.getPassword();
-
-            if (!user.getPassword().equals(password)) {
-                throw new BadCredentialsException("Wrong password.");
-            } else if (user.getPassword().equals(password)) {
-                validate = true;
-            }
-        }
-        return validate;
-
     }
 
     public UserAuth getUserAuth() {

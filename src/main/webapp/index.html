@@ -64,7 +64,6 @@
 <script type="text/javascript" src="app/libs/modernizr-2.6.2.min.js"></script>
 <script type="text/javascript" src="app/libs/ngMask.min.js"></script>
 <script type="text/javascript" src="app/libs/masks.js"></script>
-<script type="text/javascript" src="app/libs/angular-jwt.js"></script>
 <script type="text/javascript" src="app/libs/v-button.js"></script>
 
 <script type="text/javascript" src="app/libs/ui-bootstrap-tpls-0.12.0.min.js"></script>
@@ -76,18 +75,13 @@
 
 <!-- Angular -->
 <script type="text/javascript" src="app/src/app.js"></script>
-<script type="text/javascript" src="app/src/constants.js"></script>
 
 <!-- Angular Controllers -->
-<script type="text/javascript" src="app/src/controller/dashboardManager.js"></script>
-<script type="text/javascript" src="app/src/controller/insurerManager.js"></script>
-<script type="text/javascript" src="app/src/controller/brokerageManager.js"></script>
-<script type="text/javascript" src="app/src/controller/userManager.js"></script>
-<script type="text/javascript" src="app/src/controller/appController.js"></script>
+<script type="text/javascript" src="app/src/module/utils/app.controller.js"></script>
 
 <!-- Login -->
-<script type="text/javascript" src="app/src/module/login/controller/login.js"></script>
-<script type="text/javascript" src="app/src/module/login/service/login.js"></script>
+<script type="text/javascript" src="app/src/module/login/controller/login.controller.js"></script>
+<script type="text/javascript" src="app/src/module/login/service/login.service.js"></script>
 
 <!-- Customer -->
 <script type="text/javascript" src="app/src/module/customer/customer.manager.js"></script>
@@ -109,37 +103,58 @@
 
 <!-- Producer -->
 <script type="text/javascript" src="app/src/module/producer/producer.manager.js"></script>
+<script type="text/javascript" src="app/src/module/producer/services/producer.service.js"></script>
 <script type="text/javascript" src="app/src/module/producer/controllers/producer.search.js"></script>
 <script type="text/javascript" src="app/src/module/producer/controllers/producer.delete.js"></script>
 <script type="text/javascript" src="app/src/module/producer/controllers/producer.create.js"></script>
 <script type="text/javascript" src="app/src/module/producer/controllers/producer.edit.js"></script>
 
-<!-- Filters -->
-<script type="text/javascript" src="app/src/filter/filters.js"></script>
+<!-- Insurer -->
+<script type="text/javascript" src="app/src/module/insurer/insurer.manager.js"></script>
+<script type="text/javascript" src="app/src/module/insurer/services/insurer.service.js"></script>
+<script type="text/javascript" src="app/src/module/insurer/controllers/insurer.search.js"></script>
+<script type="text/javascript" src="app/src/module/insurer/controllers/insurer.delete.js"></script>
+<script type="text/javascript" src="app/src/module/insurer/controllers/insurer.create.js"></script>
+<script type="text/javascript" src="app/src/module/insurer/controllers/insurer.edit.js"></script>
 
-<!-- Angular Services -->
-<script type="text/javascript" src="app/src/service/insurerService.js"></script>
-<script type="text/javascript" src="app/src/service/brokerageService.js"></script>
-<script type="text/javascript" src="app/src/service/producerService.js"></script>
-<script type="text/javascript" src="app/src/service/userService.js"></script>
+<!-- User -->
+<script type="text/javascript" src="app/src/module/user/user.manager.js"></script>
+<script type="text/javascript" src="app/src/module/user/services/user.service.js"></script>
+<script type="text/javascript" src="app/src/module/user/controllers/user.search.js"></script>
+<script type="text/javascript" src="app/src/module/user/controllers/user.new-account.js"></script>
+<script type="text/javascript" src="app/src/module/user/controllers/user.welcome.js"></script>
+<script type="text/javascript" src="app/src/module/user/controllers/user.delete.js"></script>
+<script type="text/javascript" src="app/src/module/user/controllers/user.create.js"></script>
+<script type="text/javascript" src="app/src/module/user/controllers/user.edit.js"></script>
+<script type="text/javascript" src="app/src/module/user/factory/user.factory.js"></script>
 
-<!-- Angular Factory -->
-<script type="text/javascript" src="app/src/factory/generic/maskFactory.js"></script>
-<script type="text/javascript" src="app/src/factory/generic/paginationFactory.js"></script>
-<script type="text/javascript" src="app/src/factory/generic/autoComplete.js"></script>
-<script type="text/javascript" src="app/src/factory/generic/validationFactory.js"></script>
-<script type="text/javascript" src="app/src/factory/userFactory.js"></script>
+<!-- Home -->
+<script type="text/javascript" src="app/src/module/home/home.manager.js"></script>
+<script type="text/javascript" src="app/src/module/home/home.controller.js"></script>
 
-<!-- Componentes -->
-<script type="text/javascript" src="app/src/componentes/valuesForSelects.js"></script>
-<script type="text/javascript" src="app/src/componentes/convertUtilities.js"></script>
-<script type="text/javascript" src="app/src/componentes/maxSizePagination.js"></script>
-<script type="text/javascript" src="app/src/componentes/toast/toast.component.js"></script>
+<!-- Proposal -->
+<script type="text/javascript" src="app/src/module/proposal/proposal.manager.js"></script>
+<script type="text/javascript" src="app/src/module/proposal/services/proposal.service.js"></script>
+<script type="text/javascript" src="app/src/module/proposal/controllers/proposal.search.js"></script>
+<script type="text/javascript" src="app/src/module/proposal/controllers/proposal.delete.js"></script>
+<script type="text/javascript" src="app/src/module/proposal/controllers/proposal.create.js"></script>
+<script type="text/javascript" src="app/src/module/proposal/controllers/proposal.edit.js"></script>
 
-<!-- Util -->
-<script type="text/javascript" src="app/src/componentes/util/mask.js"></script>
-<script type="text/javascript" src="app/src/componentes/util/validations.js"></script>
+
+<!-- Utils -->
+<script type="text/javascript" src="app/src/module/utils/componentes/maskFactory.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/paginationFactory.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/autoComplete.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/validationFactory.js"></script>
+<script type="text/javascript" src="app/src/module/utils/roles.factory.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/valuesForSelects.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/convertUtilities.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/maxSizePagination.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/toast/toast.component.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/mask.js"></script>
+<script type="text/javascript" src="app/src/module/utils/componentes/validations.js"></script>
 <script type="text/javascript" src="app/src/authHelper.js"></script>
+<script type="text/javascript" src="app/src/module/utils/filters.js"></script>
 
 <!-- jQuery -->
 <script src="app/libs/jquery.js"></script>
@@ -148,5 +163,6 @@
 <!-- Metis Menu Plugin JavaScript -->
 <script src="app/libs/plugins/metisMenu/metisMenu.min.js"></script>
 <script src="app/libs/sb-admin-2.js"></script>
+
 </body>
 </html>

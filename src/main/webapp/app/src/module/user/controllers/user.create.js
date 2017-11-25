@@ -1,4 +1,4 @@
-app.controller('createUserController', function ($scope, $location, $rootScope, userService, maskFactory, toast) {
+app.controller('createUserController', function ($scope, $location, $rootScope, userService, maskFactory, toast, userFactory) {
 
     angular.extend($scope, maskFactory);
 
@@ -15,10 +15,12 @@ app.controller('createUserController', function ($scope, $location, $rootScope, 
             return;
         }
 
+        $scope.user.user = userFactory.getUser();
+
         userService.save($scope.user).then(function (u) {
             toast.open('success', 'Usuário cadastrado com sucesso!');
             $location.path('/users');
-        }, function(response) {
+        }, function (response) {
             toast.open('warning', response.message);
         });
     };

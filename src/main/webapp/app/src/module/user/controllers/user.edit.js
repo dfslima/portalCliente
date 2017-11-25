@@ -1,5 +1,5 @@
 app.controller('editUserController', function ($scope, Restangular, $location, $rootScope, $timeout,
-                                               user, userService, toast) {
+                                               user, userService, toast, userFactory) {
 
     $scope.isVisible = true;
     $scope.perfilUser = profileUser();
@@ -10,6 +10,10 @@ app.controller('editUserController', function ($scope, Restangular, $location, $
         if (!formUser.$valid) {
             $scope.validate = true;
             return;
+        }
+
+        if ($scope.user.user != undefined) {
+            $scope.user.user = userFactory.getUser();
         }
 
         userService.edit($scope.user).then(function () {

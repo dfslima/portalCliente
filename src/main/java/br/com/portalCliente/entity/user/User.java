@@ -1,5 +1,10 @@
 package br.com.portalCliente.entity.user;
 
+import br.com.portalCliente.entity.customer.Customer;
+import br.com.portalCliente.entity.insurer.Insurer;
+import br.com.portalCliente.entity.producer.Producer;
+import br.com.portalCliente.entity.property.Property;
+import br.com.portalCliente.entity.proposal.Proposal;
 import br.com.portalCliente.enumeration.Profile;
 import br.com.portalCliente.util.dateUtilities.PortalClienteDateTransformer;
 import flexjson.JSONDeserializer;
@@ -45,6 +50,25 @@ public class User extends UserAR {
 
     @Column(name = "STATUS", columnDefinition = "INT(1)")
     private boolean status;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Customer> customers;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Insurer> insurers;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Producer> producers;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Property> properties;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Proposal> proposals;
+
+    @OneToOne
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+    private User user;
 
     /**
      * Método para retonar o id do objeto Usuário
@@ -171,6 +195,53 @@ public class User extends UserAR {
         this.status = status;
     }
 
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
+    }
+
+    public List<Insurer> getInsurers() {
+        return insurers;
+    }
+
+    public void setInsurers(List<Insurer> insurers) {
+        this.insurers = insurers;
+    }
+
+    public List<Producer> getProducers() {
+        return producers;
+    }
+
+    public void setProducers(List<Producer> producers) {
+        this.producers = producers;
+    }
+
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
+    public List<Proposal> getProposals() {
+        return proposals;
+    }
+
+    public void setProposals(List<Proposal> proposals) {
+        this.proposals = proposals;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String toJson() {
         return new JSONSerializer().exclude("*.class").transform(new PortalClienteDateTransformer("dd/MM/yyyy"), Date.class).serialize(this);

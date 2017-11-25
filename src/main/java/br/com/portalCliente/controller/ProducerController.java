@@ -1,7 +1,6 @@
 package br.com.portalCliente.controller;
 
 import br.com.portalCliente.entity.producer.Producer;
-import br.com.portalCliente.enumeration.StatusProducer;
 import br.com.portalCliente.security.authentication.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,12 +27,11 @@ public class ProducerController extends AbstractController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cpf", required = false) String cpf,
             @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "status", required = false) StatusProducer status,
-            @RequestParam(value = "brokerage", required = false, defaultValue = "0") int brokerage,
+            @RequestParam(value = "userId", required = false) Integer userId,
             @RequestParam(value = "firstResult", required = false, defaultValue = "1") int firstResult,
             @RequestParam(value = "maxResults", required = false, defaultValue = "10") int maxResults) {
 
-        List<Producer> result = Producer.search(name, cpf, email, status, brokerage, firstResult, maxResults);
+        List<Producer> result = Producer.search(name, cpf, email, firstResult, maxResults, userId);
 
         return new ResponseEntity<String>(Producer.toJsonArray(result,
                 includeParam("producerBrokerages"), excludeParam()), setHeaders(), HttpStatus.OK);
@@ -45,10 +43,9 @@ public class ProducerController extends AbstractController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "cpf", required = false) String cpf,
             @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "status", required = false) StatusProducer status,
-            @RequestParam(value = "brokerage", required = false, defaultValue = "0") int brokerage) {
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
-        Long result = Producer.count(name, cpf, email, status, brokerage);
+        Long result = Producer.count(name, cpf, email, userId);
 
         return new ResponseEntity<String>(toJson("count", result), setHeaders(), HttpStatus.OK);
     }
@@ -57,9 +54,9 @@ public class ProducerController extends AbstractController {
     @ResponseBody
     public ResponseEntity<String> autoComplete(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "brokerageId", required = false) Integer brokerageId) {
+            @RequestParam(value = "userId", required = false) Integer userId) {
 
-        List<Producer> result = Producer.findByAutoComplete(name, brokerageId);
+        List<Producer> result = Producer.findByAutoComplete(name, userId);
 
         return new ResponseEntity<String>(Producer.toJsonArray(result,
                 includeParam(), excludeParam()), setHeaders(), HttpStatus.OK);
