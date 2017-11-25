@@ -2,7 +2,7 @@ app.factory('role', function ($location, $rootScope) {
 
     return {
         havePermission: function (ACTION) {
-            if (localStorage.getItem('userAuth') == undefined || $rootScope.userAuth == undefined) {
+            if (localStorage.getItem('userAuth') == undefined) {
                 if (!(ACTION === 'NEW_ACCOUNT' || ACTION === 'WELCOME')) {
                     $location.path('/');
                 }
@@ -12,7 +12,7 @@ app.factory('role', function ($location, $rootScope) {
                 return;
             }
 
-            if (!(ACTION === 'CREAT' || ACTION === 'EDIT' || ACTION === 'SEARCH' || ACTION === 'VIEW'))
+            if (!(ACTION === 'CREATE' || ACTION === 'EDIT' || ACTION === 'SEARCH' || ACTION === 'VIEW'))
                 $location.path('/');
         }
     };

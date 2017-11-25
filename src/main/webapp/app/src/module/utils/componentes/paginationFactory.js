@@ -2,7 +2,7 @@ app.factory('paginationFactory', function () {
 
     var paginationFactory = {};
 
-    paginationFactory.pagination = this.pagination = 'app/src/componentes/view/pagination.html';
+    paginationFactory.pagination = this.pagination = 'app/src/module/utils/componentes/view/pagination.html';
     paginationFactory.firstResult = this.firstResult = 1;
     paginationFactory.maxResults = this.maxResults = 10;
     paginationFactory.isShow = this.isShow = false;
