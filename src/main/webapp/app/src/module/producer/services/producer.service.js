@@ -22,6 +22,10 @@ app.service('producerService', function (Restangular, $window, $location, $rootS
         });
     };
 
+    this.findAutoComplete = function (param) {
+        return Restangular.all('producers/autoComplete').getList({param: param, userId: userFactory.getUser().id});
+    };
+
     this.list = function () {
         return Restangular.all('producers').getList().$object;
     };

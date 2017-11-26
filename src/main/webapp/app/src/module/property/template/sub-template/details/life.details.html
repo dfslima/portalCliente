@@ -1,0 +1,41 @@
+<div class="row" ng-if="property.life.type == 1">
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Qtd. Vidas:</strong> {{property.life.lifeQuantity}}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Atividade Profissional:</strong> <label
+                tooltip="{{property.life.lifeProfessionalActivityName | hidetext:40}}">{{property.life.lifeProfessionalActivityName
+            | chiptext:40}}</label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Observações:</strong> <label tooltip="{{property.description | hidetext:40}}">{{property.description
+            | chiptext:40}}</label>
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="property.life.type == 2">
+    <div class="panel-heading">Beneficiários Inclusos</div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="dataTables-example">
+                <thead>
+                <tr>
+                    <th class="centralizer">Nome do Beneficiário</th>
+                    <th class="centralizer">Percentual do Beneficiário (%)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="gradeU" ng-repeat="item in property.lifeIndividuals">
+                    <td class="centralizer">{{item.nameBeneficiary}}</td>
+                    <td class="centralizer">{{item.percentBeneficiary | percent}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

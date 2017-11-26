@@ -3,8 +3,6 @@ package br.com.portalCliente.entity.proposal;
 import br.com.portalCliente.entity.customer.Customer;
 import br.com.portalCliente.entity.property.Property;
 import br.com.portalCliente.entity.user.User;
-import br.com.portalCliente.enumeration.ProposalStatus;
-import br.com.portalCliente.enumeration.ProposalType;
 import br.com.portalCliente.util.dateUtilities.PortalClienteDateTransformer;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -25,24 +23,12 @@ public class Proposal extends ProposalAR {
     @Column(name = "ID")
     private Integer id;
 
-    @Transient
-    private String insurerName;
-
-    @Transient
-    private String producerName;
-
     @Column(name = "CREATED_AT")
     @Temporal(TemporalType.DATE)
     private Date createdAt;
 
     @Column(name = "INSURER_ID")
     private Integer insuranceId;
-
-    @Column(name = "STATUS", columnDefinition = "INT(1)")
-    private Integer status;
-
-    @Column(name = "TYPE", columnDefinition = "INT(1)")
-    private int type;
 
     // PRÊMIO LÍQUIDO
     @Column(name = "NET_AWARD")
@@ -154,32 +140,6 @@ public class Proposal extends ProposalAR {
     }
 
     /**
-     * Método para retornar o nome de uma seguradora
-     *
-     * @return insurerName
-     */
-    public String getInsurerName() {
-        return insurerName;
-    }
-
-    /**
-     * este método seta o nome da seguradora
-     *
-     * @param insurerName
-     */
-    public void setInsurerName(String insurerName) {
-        this.insurerName = insurerName;
-    }
-
-    public String getProducerName() {
-        return producerName;
-    }
-
-    public void setProducerName(String producerName) {
-        this.producerName = producerName;
-    }
-
-    /**
      * Método para setar o id no objeto Apólice
      *
      * @param id the id to set
@@ -212,38 +172,6 @@ public class Proposal extends ProposalAR {
      */
     public void setInsuranceId(Integer insuranceId) {
         this.insuranceId = insuranceId;
-    }
-
-    /**
-     * Método para retonar o status do objeto Apólice
-     *
-     * @return the status
-     */
-    public ProposalStatus getStatus() {
-        return ProposalStatus.fromValue(status);
-    }
-
-    /**
-     * Método para setar o status anterior no objeto Apólice {@link ProposalStatus}
-     *
-     * @return
-     */
-    public void setStatus(ProposalStatus status) {
-        this.status = status.getValue();
-    }
-
-
-    /**
-     * Recupera o tipo da proposta {@link ProposalType}
-     *
-     * @return
-     */
-    public ProposalType getType() {
-        return ProposalType.fromValue(type);
-    }
-
-    public void setType(ProposalType type) {
-        this.type = type.getValue();
     }
 
     /**

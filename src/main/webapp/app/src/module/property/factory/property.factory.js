@@ -145,22 +145,22 @@ app.factory('routeProperty', function () {
             details: function (type) {
                 if (type != undefined) {
                     if (type === 'COMPANY') {
-                        return 'app/views/property/details/companyDetails.html';
+                        return 'app/src/module/property/template/sub-template/details/company.details.html';
                     }
                     else if (type === 'VESSEL') {
-                        return 'app/views/property/details/vesselDetails.html';
+                        return 'app/src/module/property/template/sub-template/details/vessel.details.html';
                     }
                     else if (type === 'LIFE') {
-                        return 'app/views/property/details/lifeDetails.html';
+                        return 'app/src/module/property/template/sub-template/details/life.details.html';
                     }
                     else if (type === 'VEHICLE') {
-                        return 'app/views/property/details/vehicleDetails.html';
+                        return 'app/src/module/property/template/sub-template/details/vehicle.details.html';
                     }
                     else if (type === 'RESIDENCE') {
-                        return 'app/views/property/details/residenceDetails.html';
+                        return 'app/src/module/property/template/sub-template/details/residence.details.html';
                     }
                     else if (type === 'EQUIPMENT') {
-                        return 'app/views/property/details/equipmentDetails.html';
+                        return 'app/src/module/property/template/sub-template/details/equipment.details.html';
                     }
                 }
             },

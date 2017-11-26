@@ -37,7 +37,6 @@ public class AuthenticationController extends AbstractController {
             return new ResponseEntity<String>(messageToJson(), headers, HttpStatus.ACCEPTED);
 
         } catch (AuthenticationException e) {
-            // Verificamos que este usuário não faz parte do Segoo
             erro("E-mail ou senha incorreto");
             return new ResponseEntity<String>(messageToJson(), headers, HttpStatus.ACCEPTED);
         } catch (PortalClienteException pce) {

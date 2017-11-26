@@ -1,847 +1,171 @@
-<div class="style-form-policy">
-    <div class="row">
-        <!-- #7BB0A6 - #FCB410-->
-        <div class="col-lg-12" style="background-color: #FCB410; color: #FFFFFF; padding: 10px 15px;">
+<div class="row">
 
-            <i style="font-weight: 600; text-align: left;" class="fa fa-file-text-o fa-fw"></i>&nbsp;&nbsp;
+    <div class="col-lg-12">
+        <div style="float:right; margin-top:35px;">
+            <a href="" ng-click="selectedProperties()" class="btn btn-primary btn-circle" tooltip="Nova proposta"><i
+                    class="fa fa-plus"></i></a>
+        </div>
+        <h3 class="page-header">Consulta de proposta</h3>
+    </div>
 
-            <span class="page-header-custom custom-font-roboto label-title-form">
-         			Cadastro - Proposta/Ap&oacute;lice
-         			<span style="font-weight: 600;" class="label-title-form custom-font-roboto">- Ramo {{propertyName}}</span>
-         </span>
+    <div class="col-lg-12">
+        <alert ng-repeat="alert in alertsValidate" type="{{alert.type}}">{{alert.msg}}</alert>
+        <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-search fa-fw" style="margin-right: 7px;"></i>Pesquisar...</div>
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Proposta</label>
+                            <input class="form-control " ng-model="proposal"
+                                   maxlength="15" onkeypress="return onlyNumber(event)">
+                        </div>
+                        <div class="col-md-3 search-input">
+                            <label>Segurado</label>
+                            <input type="text" ng-model="customer.name" class="form-control "
+                                   autocomplete="off"
+                                   typeahead="item as showNameCustomer(item) +' - '+ maskCpfCnpj(item.cpfCnpj) for item in autoCompleteCustomer($viewValue)"
+                                   typeahead-on-select="onSelectCustomer($item)"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Placa</label>
+                            <input class="form-control " ng-model="board" mask="@@@-9999" upper-Case>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>CPF/CNPJ</label>
+                            <input class="form-control " ng-model="cpfCnpj" ui-br-cpfcnpj-mask>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <br>
+
+                        <div class="col-md-3 search-input">
+                            <label>Seguradora</label>
+                            <input class="form-control "
+                                   ng-model="insurance.corporateName"
+                                   typeahead="item as item.corporateName for item in autoCompleteInsurer($viewValue)"
+                                   typeahead-on-select="onSelectInsurance($item)"/>
+                        </div>
+
+                        <div class="col-md-3 search-input">
+                            <label>Produtor</label>
+                            <input class="form-control "
+                                   ng-model="producer.name"
+                                   typeahead="item as item.email for item in autoCompleteProducer($viewValue)"
+                                   typeahead-on-select="onSelectProducer($item)"/>
+                        </div>
+
+                    </div>
+
+                </div>
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <button class="Button btn btn-primary" ng-click="search()" v-busy="isBusy" v-pressable
+                                v-busy-label="Pesquisando">Pesquisar
+                        </button>
+                        <button class="btn btn-default" ng-click="clear()">Limpar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <br />
-    <div ng-if="propertyType == 'VEHICLE' && !isEditPolicy">
-        <md-content class="md-padding">
-            <md-tabs md-dynamic-height md-border-bottom md-selected="$parent.indexTab">
-                <md-tab label="Auto" md-on-select="selectTab($event, false)">
-                    <md-content class="container-tabs-movements"></md-content>
-                </md-tab>
-                <md-tab label="Frota" md-on-select="selectTab($event, true)">
-                    <md-content class="container-tabs-movements"></md-content>
-                </md-tab>
-            </md-tabs>
-        </md-content>
-        <br />
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-bars fa-fw" style="margin-right: 7px;"></i>Lista de Apólices
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="dataTables-example">
+                        <thead>
+                        <tr class="font-size-grid">
+                            <th class="leftAlign">Segurado</th>
+                            <th class="leftAlign">Propriedade</th>
+                            <th class="leftAlign">Descrição</th>
+                            <th class="leftAlign">Produtor</th>
+                            <th class="leftAlign">Seguradora</th>
+                            <th class="centralizer">Status</th>
+                            <th class="centralizer">Vigência</th>
+                            <th class="centralizer">Proposta</th>
+                            <th class="rightAlign">Prêmio</th>
+                            <th class="centralizer">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="gradeU font-size-grid font-list-table" ng-repeat="item in itens" ng-show="isShow">
+                            <td class="leftAlign">
+                                <label ng-if="item.customer.type == 1" tooltip="{{item.customer.name | hidetext:10}}"
+                                       class="text-capitalize">{{item.customer.name
+                                    | chiptext:10 | lowercase}}</label>
+                                <label ng-if="item.customer.type == 2"
+                                       tooltip="{{item.customer.corporateName | hidetext:10}}">{{item.customer.corporateName
+                                    | chiptext:10 | lowercase}}</label>
+                            </td>
+                            <td class="leftAlign">
+                                <label>{{propertyName(item.property.propertyType)}}</label>
+                            </td>
+                            <td class="leftAlign">
+                                <label tooltip="{{description(item.property, item.property.propertyType, item) | hidetext:10}}">
+                                    {{description(item.property, item.property.propertyType, item) | chiptext:10}}
+                                </label>
+                            </td>
+                            <td class="leftAlign">
+                                <label tooltip="{{item.producerName | hidetext:10}}" class="text-capitalize">{{item.producerName
+                                    |
+                                    chiptext:10 | lowercase}}</label>
+                            </td>
+                            <td class="leftAlign">
+                                <label tooltip="{{item.insurerName | hidetext:10}}" class="text-capitalize">{{item.insurerName
+                                    |
+                                    chiptext:10 | lowercase}}</label>
+                            </td>
+                            <td class="centralizer">
+                                <label tooltip="{{getStatusDescriptionPolicy(item)}}">{{getStatusPolicy(item)}} </label>
+                            </td>
+
+                            <td class="centralizer">{{item.startTerm | date:dd/MM/yyyy}} - {{item.endTerm | date:dd/MM/yyyy}}</td>
+
+                            <td class="centralizer">
+                                <label tooltip="{{item.proposalNumber | hidetext:15}}">{{item.proposalNumber | chiptext:15}}</label>
+                            </td>
+
+                            <td class="rightAlign">{{item.netAward | customCurrency:"R$"}}</td>
+
+                            <td class="centralizer">
+                                <a href="" ng-click="edit(item.id)" tooltip="Editar">
+                                    <span class="fa fa-fw fa-edit fa-2x"></span>
+                                </a>
+                                <a href="" ng-click="remove(item)" tooltip="Excluir">
+                                    <span class="fa fa-trash-o fa-2x"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-12" ng-if="isBusy">
+                        <div class="col-md-5"></div>
+                        <div class="col-md-3">
+                            <md-progress-circular class="md-accent md-hue-3 centralizer" md-mode="indeterminate"
+                                                  md-diameter="30"></md-progress-circular>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <h5 class="centralizer" ng-show="!isShow" style="color:#C0C0C0;">Não existe nenhum resultado para
+                        esta busca</h5>
+                    <div ng-show="isShow" ng-include="pagination"></div>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
     </div>
-    <form name="policyForm" novalidate>
-        <div class="row " ng-if="propertyType == 'VEHICLE' && !isEditPolicy && !isFleet">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-12 sessions-policyform">
-                                <p>Importa&ccedil;&atilde;o de dados</p>
-                                <hr />
-                            </div>
-                            <div class="col-md-5 search-input">
-                                <label>Selecione a seguradora da proposta</label>
-                                <p class="input-group" id="scrollable-dropdown-menu">
-                                    <input type="text" ng-model="insurer.corporateName" class="form-control input-segoo"
-                                           ng-keypress="insurerValidate()"
-                                           placeholder="Clique para selecionar uma seguradora" autocomplete="off"
-                                           typeahead="item as item.corporateName for item in autoCompleteInsurerByBrokerage($viewValue)"
-                                           typeahead-on-select="onSelectInsurerForPDF($item)"
-                                           ng-disabled="property === '' || property === undefined || erroProperty"
-                                           typeahead-template-url="app/componentes/templatesTpl/insurerTpl.html" />
-                                    <span class="input-group-btn">
-                           <button type="button" class="btn btn-default btn-sm div-search" ng-disabled="true">
-                           <i ng-class="{'glyphicon glyphicon-search': !loadingInsurer(), 'fa fa-spinner fa-spin': loadingInsurer()}"></i>
-                           </button>
-                           </span>
-                                </p>
-                            </div>
-                            <div class="col-md-5">
-                                <br />
-                                <p></p>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <!-- <label>Fazer upload de proposta já existente</label> -->
-                                        <div class="btn btn-smm btn-upload" accept="application/pdf"
-                                             ngf-select ngf-change="upload($file)"
-                                             tooltip-placement="bottom" tooltip="Anexar PDF da proposta" ngf-multiple="false">
-                                            <i ng-class="{'fa fa-cloud-upload': !uploading, 'fa fa-spinner fa-spin': uploading}"></i>
-                                        </div>
-                                        <strong ng-if="uploading">Aguarde... {{fileProgress}}</strong>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <img alt="" id="img-pdf-updater" src="app/img/others/img-pdf-updater_2.png">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <br />
-                                <div id="msg-information-about-insurer-pdf">
-                                    <span><i class="colorRequired">*</i> Confira as seguradoras disponíveis <a ng-click="showInsurerWithPdf()" id="link-details-pdf">Aqui!</a></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <!--  <div class="panel-heading">
-                       Dados do segurado
-                       <div class="text-edit-properties" ng-show="isDisplayFields && customer.empty == undefined">
-                          <label class="">
-                          Para alterar, clique aqui!<i class="fa fa-fw fa-long-arrow-right arrow-right-custom"></i>
-                          </label>
-                          <a href="" class="btn btn-info btn-xs" ng-click="clearCustomer()" tooltip="Aterar proprietário">
-                          <i class="fa fa-fw fa-edit"></i>
-                          </a>
-                       </div>
-                       </div> -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-12 sessions-policyform">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <p>Dados do segurado</p>
-                                    </div>
-                                    <div class="col-lg-6 text-edit-properties" ng-show="isDisplayFields && customer.empty == undefined">
-                                        <label class="">
-                                            Para alterar, clique aqui!<i class="fa fa-fw fa-long-arrow-right arrow-right-custom"></i>
-                                        </label>
-                                        <a href="" class="btn btn-info btn-xs" ng-click="clearCustomer()" tooltip="Aterar proprietário">
-                                            <i class="fa fa-fw fa-edit"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <hr />
-                            </div>
-                        </div>
-                        <div class="row" ng-show="!isDisplayFields || customer.empty != undefined">
-                            <div class="col-lg-5 search-input">
-                                <div class="form-group">
-                                    <label>Nome/CPF-CNPJ<i class="colorRequired">*</i></label>
-                                    <p class="input-group" id="scrollable-dropdown-menu">
-                                        <input type="text" ng-model="customer" class="form-control input-segoo" autocomplete="off"
-                                               name="customer" required placeholder="Clique para selecionar um proprietário"
-                                               typeahead="item as maskCpfCnpj(item.cpfCnpj) for item in autoCompleteCustomerGeneric($viewValue)"
-                                               typeahead-on-select="onSelect($item)"
-                                               typeahead-template-url="app/componentes/templatesTpl/customerTplForPolicy.html" />
-                                        <span class="input-group-btn">
-                              <button type="button" class="btn btn-default btn-sm div-search" ng-disabled="true">
-                              <i ng-class="{'glyphicon glyphicon-search': !loadingCustomer(), 'fa fa-spinner fa-spin': loadingCustomer()}"></i>
-                              </button>
-                              </span>
-                                    </p>
-                                    <span ng-show="policyForm.customer.$invalid && validate" class="errorForm">
-                           O segurado precisa ser preenchido.
-                           </span>
-                                    <span ng-show="!validateCustomer() && validate && !policyForm.customer.$invalid" class="errorForm">
-                           Informe um segurado válido
-                           </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" ng-show="isDisplayFields && customer.empty == undefined">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong>CPF/CNPJ:</strong> {{maskCpfCnpj(customer.cpfCnpj)}}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong>Nome:</strong>
-                                    <label ng-if="customer.type == 1" tooltip="{{customer.name | hidetext:25}}">{{customer.name | chiptext:25}}</label>
-                                    <label ng-if="customer.type == 2" tooltip="{{customer.corporateName | hidetext:25}}">{{customer.corporateName | chiptext:25}}</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong>Telefone:</strong> {{maskPhone(customer.phone)}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" ng-show="isDisplayFields && customer.empty == undefined">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong>E-mail:</strong> {{customer.email}}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong>Celular:</strong> {{maskPhone(customer.mobilePhone)}}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <strong>Observações:</strong> {{customer.observation}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" ng-if="!isFleet">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <!-- <div class="panel-heading">Dados da Propriedade</div> -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-12 sessions-policyform">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <p>Dados da Propriedade</p>
-                                    </div>
-                                    <div class="col-lg-6 text-edit-properties" ng-if="propertyDetails">
-                                        <label class="">
-                                            Para alterar, clique aqui!<i
-                                                class="fa fa-fw fa-long-arrow-right arrow-right-custom"></i>
-                                        </label>
-                                        <a href="" class="btn btn-info btn-xs" ng-click="clearProperty()" tooltip="Aterar propriedade">
-                                            <span class="fa fa-fw fa-edit"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <hr />
-                            </div>
-                            <div class="col-md-5 search-input">
-                                <div class="form-group" ng-if="!propertyDetails">
-                                    <label ng-show="!editValue">Detalhes<i class="colorRequired">*</i></label>
-                                    <label ng-show="editValue">Placa<i class="colorRequired">*</i></label>
-                                    <p class="input-group" id="scrollable-dropdown-menu">
-                                        <input ng-if="!editValue" type="text" ng-model="propertyData.name" class="form-control input-segoo" autocomplete="off"
-                                               name="property" placeholder="Clique para selecionar uma propriedade"
-                                               ng-disabled="!validateCustomer() || propertyList.length == 0 || customer == undefined"
-                                               typeahead="item as returnNames(item) for item in autoCompleteProperty($viewValue, propertyType, customer.id)"
-                                               typeahead-on-select="onSelectProperty($item)"
-                                               typeahead-template-url="app/componentes/templatesTpl/propertyTpl.html" required />
-                                        <input ng-if="editValue" type="text" ng-model="property.vehicle.vehicleLicensePlate" class="form-control input-segoo" autocomplete="off"
-                                               name="property" placeholder="Clique para selecionar uma propriedade"
-                                               ng-disabled="!validateCustomer() || propertyList.length == 0 || customer == undefined"
-                                               typeahead="item as returnNames(item) for item in autoCompleteProperty($viewValue, propertyType, customer.id)"
-                                               typeahead-on-select="onSelectProperty($item)" mask="@@@-9999" upper-Case restrict="reject"
-                                               typeahead-template-url="app/componentes/templatesTpl/propertyTpl.html" required />
-                                        <span class="input-group-btn">
-                              <button type="button" class="btn btn-default btn-sm div-search" ng-disabled="true">
-                              <i ng-class="{'glyphicon glyphicon-search': !loadingProperty(), 'fa fa-spinner fa-spin': loadingProperty()}"
-                                 ng-if="validateCustomer() || propertyList.length > 0 || customer != undefined"></i>
-                              </button>
-                              </span>
-                                    </p>
-                                    <span ng-show="policyForm.property.$invalid && validate && !editValue" class="errorForm">
-                           A descrição precisa ser preenchida.
-                           </span>
-                                    <span ng-show="policyForm.property.$invalid && validate && editValue" class="errorForm">
-                           A placa precisa ser preenchida.
-                           </span>
-                                    <span ng-show="erroProperty" class="errorForm">
-                           Já existe uma proposta vigente para a propriedade informada.
-                           </span>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div ng-if="propertyDetails" ng-include="details">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" ng-if="propertyType == 'VEHICLE' && isFleet">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <!-- <div class="panel-heading">Dados da Propriedade</div> -->
-                    <div class="panel-body">
-                        <div class="sessions-policyform">
-                            <p>Dados da Propriedade</p>
-                            <hr />
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5 search-input">
-                                <label>Placa<i class="colorRequired">*</i></label>
-                                <p class="input-group" id="scrollable-dropdown-menu">
-                                    <input ng-if="editValue" type="text" ng-model="fleet.property" class="form-control input-segoo" autocomplete="off"
-                                           placeholder="Clique para selecionar uma propriedade"
-                                           ng-disabled="!validateCustomer() || propertyList.length == 0 || customer == undefined"
-                                           typeahead="item as returnNames(item) for item in autoCompleteProperty($viewValue, propertyType, customer.id)"
-                                           typeahead-on-select="onSelectPropertyForFleet($item)" upper-Case restrict="reject"
-                                           typeahead-template-url="app/componentes/templatesTpl/propertyTpl.html" />
-                                    <span class="input-group-btn">
-                           <button type="button" class="btn btn-default btn-sm div-search" ng-disabled="true">
-                           <i ng-class="{'glyphicon glyphicon-search': !loadingProperty(), 'fa fa-spinner fa-spin': loadingProperty()}"></i>
-                           </button>
-                           </span>
-                                </p>
-                                <span ng-show="erroProperty" class="errorForm">
-                        Já existe uma proposta vigente para a propriedade informada
-                        </span>
-                            </div>
-                        </div>
-                        <div class="row" ng-if="policy.fleets.length > 0">
-                            <div class="panel-heading">Lista de autos Selecionadas</div>
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover" id="dataTables-example">
-                                        <thead>
-                                        <tr>
-                                            <th class="centralizer">Placa</th>
-                                            <th class="centralizer">Fabricante</th>
-                                            <th class="centralizer">Modelo</th>
-                                            <th class="centralizer">Modelo/Fabricação (Ano)</th>
-                                            <th class="centralizer">Chassi</th>
-                                            <th class="centralizer">Código FIPE:</th>
-                                            <th class="centralizer">Ações</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="gradeU" ng-repeat="item in policy.fleets">
-                                            <td class="centralizer">{{item.property.vehicle.vehicleLicensePlate}}</td>
-                                            <td class="centralizer">{{item.property.vehicle.vehicleMakeName}}</td>
-                                            <td class="centralizer">{{item.property.vehicle.vehicleModelName}}</td>
-                                            <td class="centralizer">{{item.property.vehicle.vehicleModelYear}}/{{item.property.vehicle.vehicleRegisterYear}}</td>
-                                            <td class="centralizer">{{item.property.vehicle.vehicleChassis}}</td>
-                                            <td class="centralizer">{{item.property.vehicle.vehicleCodeFipe}}</td>
-                                            <td class="centralizer">
-                                                <a href="" class="btn btn-smm btn-danger" ng-click="removeProperty(item)" tooltip="Excluir">
-                                                    <span class="fa fa-trash-o"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <!-- <div class="panel-heading"></div> -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-9">
-                                <div class="sessions-policyform">
-                                    <p>Dados da Proposta</p>
-                                    <hr />
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 search-input">
-                                        <div class="form-group">
-                                            <label>Seguradora<i class="colorRequired">*</i></label>
-                                            <p class="input-group" id="scrollable-dropdown-menu">
-                                                <input type="text" ng-model="insurer.corporateName" class="form-control input-segoo" name="insurer"
-                                                       required placeholder="Clique para selecionar uma seguradora" autocomplete="off"
-                                                       typeahead="item as maskCpfCnpj(item.cnpj) for item in autoCompleteInsurerByBrokerage($viewValue)"
-                                                       typeahead-on-select="onSelectInsurer($item)"
-                                                       ng-disabled="property === '' || property === undefined || erroProperty && policy.fleets.length == 0 || erroProperty && policy.fleets.length > 0 && !isFleet"
-                                                       typeahead-template-url="app/componentes/templatesTpl/insurerTpl.html" />
-                                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default btn-sm div-search" ng-disabled="true">
-                                    <i ng-class="{'glyphicon glyphicon-search': !loadingInsurer(), 'fa fa-spinner fa-spin': loadingInsurer()}"></i>
-                                    </button>
-                                    </span>
-                                            </p>
-                                            <span ng-show="policyForm.insurer.$invalid && validate" class="errorForm">
-                                 A seguradora precisa ser preenchida.
-                                 </span>
-                                            <span ng-show="!validateInsurer() && validate && !policyForm.insurer.$invalid" class="errorForm">
-                                 Informe uma Seguradora válida
-                                 </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 search-input">
-                                        <div class="form-group">
-                                            <label>Produtor<i class="colorRequired">*</i></label>
-                                            <span class="input-group" id="scrollable-dropdown-menu">
-                                 <input type="text" ng-model="producer.name" class="form-control input-segoo" name="producer"
-                                        required placeholder="Clique para selecionar um produtor" autocomplete="off"
-                                        typeahead="item as item.email for item in autoCompleteProducerByBrokerage($viewValue)"
-                                        typeahead-on-select="onSelectProducer($item)" ng-disabled="insurer === '' || insurer === undefined"
-                                        typeahead-template-url="app/componentes/templatesTpl/producerTpl.html" />
-                                 <span class="input-group-btn">
-                                 <button type="button" class="btn btn-default btn-sm div-search" ng-disabled="true">
-                                 <i ng-class="{'glyphicon glyphicon-search': !loadingProducer(), 'fa fa-spinner fa-spin': loadingProducer()}"
-                                    ng-if="insurer != undefined"></i>
-                                 </button>
-                                 </span>
-                                 </span>
-                                            <span ng-show="policyForm.producer.$invalid && validate" class="errorForm">
-                                 O produtor precisa ser preenchido.
-                                 </span>
-                                            <span ng-show="!validateProducer() && validate && !policyForm.producer.$invalid" class="errorForm">
-                                 Informe um Produtor válido
-                                 </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Nº de Parcelas<i class="colorRequired">*</i></label>
-                                            <select class="form-control input-segoo" name="installments" required
-                                                    ng-model="policy.installmentsNumber" ng-change="getProducerInsurer()"
-                                                    ng-disabled="!validateValue(producer)">
-                                                <option value="">- selecione -</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                                <option value="11">11</option>
-                                                <option value="12">12</option>
-                                            </select>
-                                            <span ng-show="policyForm.installments.$invalid && validate" class="errorForm">
-                                 Selecione uma parcela.
-                                 </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Prêmio Líquido (R$) <i class="colorRequired">*</i></label>
-                                            <input type="text" class="form-control input-segoo" ng-model="policy.netAward"
-                                                   ng-disabled="!validatePercentProducer" ng-change="calculateValues(true, true, 'FOR_NET_AWARD')"
-                                                   ui-number-mask="2", ui-negative-number restrict="reject">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Nº da Proposta<i class="colorRequired">*</i></label>
-                                            <input class="form-control input-segoo" name="proposalNumber" required
-                                                   autocomplete="off" ng-model="policy.proposalNumber" placeholder="Ex.: 007"
-                                                   ng-disabled="!validatePercentProducer"
-                                                   maxlength="25" onkeypress="return onlyNumber(event)">
-                                            <span ng-show="policyForm.proposalNumber.$invalid && validate" class="errorForm">
-                                 Informe o n&uacute;mero da proposta.
-                                 </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="sessions-policyform">
-                                    <p >Comissionamento</p>
-                                    <hr />
-                                </div>
-                                <div class="row" >
-                                    <div class="col-md-3" menus-segoo user="userSystem" identifier="'detailsProposal'">
-                                        <div class="form-group input-brokerage">
-                                            <label>Comissão Corretora (%)<i class="colorRequired">*</i></label>
-
-                                            <input class="form-control input-segoo" ng-model="policy.brokerageCommissionPercent"
-                                                   ng-change="calculateValues(false, false, 'FOR_BROKERAGE')"
-                                                   ng-disabled="!validatePercentProducer || (getWayCommissioningByType(brokerage).securityType === 2 && propertyType === 'VEHICLE') || propertyType !== 'VEHICLE'"
-                                                   ui-percentage-mask max="1" name="brokerageComissionPercent"
-                                                   placeholder="Ex.: 30%">
-
-                                            <span ng-show="policyForm.brokerageComissionPercent.$invalid && validate" class="errorForm">
-                                 			Informe a comiss&atilde;o da corretora.
-                                 </span>
-
-                                            <span ng-show="policyForm.brokerageComissionPercent.$error.max" class="errorForm">
-                                 			A comiss&atilde;o da corretora n&atilde;o pode exceder 100%
-                                 </span>
-
-                                            <rzslider class="custom-slider" rz-slider-model="sliderBrokerage.value" rz-slider-options="sliderBrokerage.options"></rzslider>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group input-producer">
-                                            <label>Comissão Produtor (%)<i class="colorRequired">*</i></label>
-                                            <input name="producerComission" class="form-control input-segoo"	ng-model="policy.producerCommissionPercent"
-                                                   ng-change="calculateValues(false, false, 'FOR_PRODUCER')" ng-disabled="!validatePercentProducer || (getWayCommissioningByType(brokerage).securityType === 2 && propertyType === 'VEHICLE')"
-                                                   ui-percentage-mask max="1"
-                                                   placeholder="ex.: 70%">
-
-                                            <span ng-show="policyForm.producerComission.$invalid && validate" class="errorForm">
-                                 			Informe a comiss&atilde;o do produtor.
-                                 </span>
-
-                                            <span ng-show="policyForm.producerComission.$error.max" class="errorForm">
-                                 			A comiss&atilde;o do produtor n&atilde;o pode exceder 100%
-                                 </span>
-
-                                            <rzslider class="custom-slider" rz-slider-model="sliderProducer.value" rz-slider-options="sliderProducer.options"></rzslider>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3" ng-if="propertyType === 'VEHICLE'">
-                                        <div class="form-group input-workedCommission">
-                                            <label>Comissão Trabalhada (%)<i class="colorRequired">*</i></label>
-                                            <input class="form-control input-segoo" ng-model="policy.policyCommissionPercent" name="policyCommissionPercent"
-                                                   ng-disabled="editValue && getWayCommissioningByType(brokerage).securityType == 2  || !validatePercentProducer"
-                                                   ng-change="calculateValues(false, false, 'FOR_POLICY')"
-                                                   ui-percentage-mask ui-percentage-value min="0.0001" max="1"
-                                                   placeholder="Ex.: 30%"
-                                                   autocomplete="off">
-
-                                            <span ng-show="policyForm.policyCommissionPercent.$error.max" class="errorForm">
-                                 			A comiss&atilde;o trabalhada n&atilde;o pode exceder 100%
-                                 </span>
-
-                                            <span ng-show="policyForm.policyCommissionPercent.$error.min" class="errorForm">
-                                 			A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
-                                 </span>
-
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-3" ng-if="propertyType !== 'VEHICLE'">
-                                        <div class="form-group input-workedCommission">
-                                            <label>Comissão Trabalhada (%)<i class="colorRequired">*</i></label>
-                                            <input class="form-control input-segoo" ng-model="policy.policyCommissionPercent" name="policyCommissionPercent"
-                                                   ng-disabled="editValue && getWayCommissioningByType(brokerage).securityType == 2  || !validatePercentProducer"
-                                                   ng-change="calculateValues(false, false, 'FOR_POLICY')"
-                                                   ui-percentage-mask ui-percentage-value min="0.0001"
-                                                   placeholder="Ex.: 30%">
-
-                                            <span ng-show="policyForm.policyCommissionPercent.$error.min" class="errorForm">
-                                 			A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
-                                 </span>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <br />
-                                <div class="sessions-policyform">
-                                    <p>Desconto (-) / Agravamento (+)</p>
-                                    <hr />
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3" ng-if="getWayCommissioningByType(brokerage).discountPolicyType === 1 || getWayCommissioningByType(brokerage).discountPolicyType === 3">
-                                        <div class="form-group input-discount">
-                                            <label>Desconto Corretora (%)</label>
-                                            <input class="form-control input-segoo" ng-model="policy.discountBrokerage"
-                                                   ng-disabled="!validatePercentProducer" name="discountBrokerage"
-                                                   ng-change="calculateValues(true, false, 'FOR_DISCOUNT_BROKERAGE')"
-                                                   ui-percentage-mask max="brokerageMax"
-                                                   placeholder="Ex.: 5%">
-
-                                            <span ng-show="policyForm.discountBrokerage.$invalid" class="errorForm">
-                                 			Desconto excede a comiss&atilde;o da corretora
-                                 </span>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3" ng-if="getWayCommissioningByType(brokerage).discountPolicyType === 2 || getWayCommissioningByType(brokerage).discountPolicyType === 3">
-                                        <div class="form-group input-discount">
-                                            <label>Desconto Produtor (%)</label>
-                                            <input class="form-control input-segoo" ng-model="policy.discount"
-                                                   ng-disabled="!validatePercentProducer" name="discount" max="producerMax"
-                                                   ng-change="calculateValues(true, false, 'FOR_DISCOUNT')" ui-percentage-mask
-                                                   placeholder="Ex.: 10%">
-
-                                            <span ng-show="policyForm.discount.$invalid" class="errorForm">
-                                 			Desconto excede a comiss&atilde;o do produtor
-                                 </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group input-aggravation">
-                                            <label>Agravamento (%)</label>
-                                            <input class="form-control input-segoo" ng-model="policy.aggravation" ng-disabled="!validatePercentProducer"
-                                                   ng-change="calculateValues(false, true, 'FOR_AGGRAVATION')" ui-percentage-mask
-                                                   placeholder="Ex.: 10%">
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="sessions-policyform">
-                                    <p>Vig&ecirc;ncia</p>
-                                    <hr />
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Inicio da vig&ecirc;ncia<i class="colorRequired">*</i></label>
-                                            <input type="text" name="startTerm" class="form-control input-segoo" ng-model="policy.startTerm" mask="99/99/9999" onkeypress="return onlyNumber(event)" ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/" ng-disabled="!validatePercentProducer" ng-change="endCallYear(policyForm.startTerm.$invalid, policyForm.endTerm.$invalid)" required/>
-                                            <span ng-if="policyForm.startTerm.$invalid" class="errorForm">
-                                 Informe uma data v&aacute;lida</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Fim da vig&ecirc;ncia <i class="colorRequired">*</i></label>
-                                            <input type="text" name="endTerm" class="form-control input-segoo" ng-model="policy.endTerm" mask="99/99/9999" onkeypress="return onlyNumber(event)" ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/" ng-disabled="!validatePercentProducer" ng-change="startCallYear(policyForm.endTerm.$invalid, policyForm.startTerm.$invalid)" required/>
-                                            <span class="errorForm" ng-if="policyForm.endTerm.$incvalid">Informe uma data v&aacute;lida</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Data de transmiss&atilde;o <i class="colorRequired">*</i></label>
-                                            <input type="text" name="dateTransmission" class="form-control input-segoo" ng-model="policy.dateTransmission" mask="99/99/9999" onkeypress="return onlyNumber(event)" ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/" ng-disabled="!validatePercentProducer" required/>
-                                            <span class="errorForm" ng-if="policyForm.dateTransmission.$invalid">  Informe uma data v&aacute;lida</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class=" col-md-offset-2" ng-if="!validateDates(policy.startTerm, policy.endTerm)">
-                              <span class="errorForm">
-                              O período informado é inválido.
-                              </span>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <br />
-                                        <div class="form-group">
-                                            <label>Observações</label>
-                                            <textarea class="form-control input-segoo" ng-model="policy.comments" maxlength="450"
-                                                      placeholder="Observações acerca da proposta" ng-disabled="!validatePercentProducer" rows="4"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Detalhes Proposta -->
-                            <div class="col-lg-3 div-resume" menus-segoo user="userSystem" identifier="'detailsProposal'">
-                                <div class="col-md-12 content-div-resume">
-                                    <div class="row">
-                                        <div class="text-center text-resume-policyform">Resumo</div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="div-border-bottom">
-                                                    <label class="div-resume-label-tittle">Comissão Máxima</label>
-                                                </div>
-                                                <div class="row div-resume-first-row" >
-                                                    <div class="col-md-4">Percentual:</div>
-                                                    <div class="col-md-8 div-resume-result-right"> {{policy.policyCommissionPercentMaximum | percent:2}}  </div>
-                                                </div>
-                                                <div class="row" >
-                                                    <div class="col-md-4">Valor:</div>
-                                                    <div class="col-md-8 div-resume-label-gold">{{policy.netAward * policy.policyCommissionPercentMaximum | segooCurrency: 'R$ '}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="div-border-bottom">
-                                                    <label class="div-resume-label-tittle">Comissão Trabalhada</label>
-                                                </div>
-                                                <div class="row div-resume-first-row" >
-                                                    <div class="col-md-4">Percentual:</div>
-                                                    <div class="col-md-8 div-resume-result-right"> {{policy.policyCommissionPercent | percent:2}}  </div>
-                                                </div>
-                                                <div class="row" >
-                                                    <div class="col-md-4">Valor:</div>
-                                                    <div class="col-md-8 div-resume-label-neutral">{{policy.policyCommission | segooCurrency: 'R$ '}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="div-border-bottom">
-                                                    <label class="div-resume-label-tittle">Adicionais (%)</label>
-                                                </div>
-                                                <div class="row div-resume-first-row" ng-if="getWayCommissioningByType(brokerage).discountPolicyType === 2 || getWayCommissioningByType(brokerage).discountPolicyType === 3">
-                                                    <div class="col-md-8">Desconto Produdor:</div>
-                                                    <div class="col-md-4 div-resume-label-red">{{policy.discount | percent:2}}</div>
-                                                </div>
-                                                <div class="row div-resume-first-row" ng-if="getWayCommissioningByType(brokerage).discountPolicyType === 1 || getWayCommissioningByType(brokerage).discountPolicyType === 3">
-                                                    <div class="col-md-8">Desconto Corretora:</div>
-                                                    <div class="col-md-4 div-resume-label-red">{{policy.discountBrokerage | percent:2}}</div>
-                                                </div>
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-8">Agravamento:</div>
-                                                    <div class="col-md-4 div-resume-label-green">{{policy.aggravation | percent:2}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="div-border-bottom">
-                                                    <label class="div-resume-label-tittle">Comissão Corretora</label>
-                                                </div>
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-8">Percentual Trabalhado:</div>
-                                                    <div class="col-md-4 div-resume-result-right">{{policy.brokerageCommissionPercent | percent:2}}</div>
-                                                </div>
-
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-8">Percentual Prêm. Lqd.:</div>
-                                                    <div class="col-md-4 div-resume-result-right">{{transformPercent30(policy.brokerageCommissionPercent, policy.policyCommissionPercent) | percent:2}}</div>
-                                                </div>
-
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-4">Valor:</div>
-                                                    <div class="col-md-8 div-resume-label-blue">{{policy.brokerageCommission | segooCurrency: 'R$ '}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="div-border-bottom">
-                                                    <label class="div-resume-label-tittle">Comissão Produtor</label>
-                                                </div>
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-8">Percentual Trabalhado:</div>
-                                                    <div class="col-md-4 div-resume-result-right">{{policy.producerCommissionPercent | percent:2}}</div>
-                                                </div>
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-8">Percentual Prêm. Lqd.:</div>
-                                                    <div class="col-md-4 div-resume-result-right">{{transformPercent30(policy.producerCommissionPercent, policy.policyCommissionPercent) | percent:2}}</div>
-                                                </div>
-                                                <div class="row div-resume-first-row">
-                                                    <div class="col-md-4">Valor:</div>
-                                                    <div class="col-md-8 div-resume-label-orange">{{policy.producerCommission  | segooCurrency: 'R$ '}}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Detalhes Proposta -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" ng-if="propertyType == 'VEHICLE'">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <!-- <div class="panel-heading">Dados da Franquia</div> -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-12 sessions-policyform">
-                                <p>Dados da Franquia</p>
-                                <hr />
-                            </div>
-                            <div class="col-md-4">
-                                <label>Franquia:</label>
-                                <div class="form-group">
-                                    <select type="radio" name="optionsFranchise" id="optionsRadios2" ng-model="policyFranchise.franchise.franchiseType"
-                                            class="form-control input-segoo" ng-options="y.value as y.name for y in franchiseTypes | orderBy:'+name'">
-                                        <option value="">-- Selecione --</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Valor da franquia (R$)</label>
-                                <input type="text" class="form-control input-segoo"
-                                       ng-model="policyFranchise.value" ui-number-mask="2" ui-negative-number>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <button class="btn btn-primary" ng-click="addFranchise()" ng-disabled="policyFranchise.franchise.franchiseType == undefined">Adicionar</button>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row" ng-if="policy.policyFranchises.length > 0">
-                            <div class="panel-heading">Franquias selecionadas</div>
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover" id="dataTables-example">
-                                        <thead>
-                                        <tr>
-                                            <th class="centralizer">Descrição</th>
-                                            <th class="centralizer">Valor (R$)</th>
-                                            <th class="centralizer">Ações</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="gradeU" ng-repeat="item in policy.policyFranchises">
-                                            <td class="centralizer">{{getFranchiseDescription(item.franchise.franchiseType, propertyType)}}</td>
-                                            <td class="centralizer">{{item.value | currency:"R$ "}}</td>
-                                            <td class="centralizer">
-                                                <a href="" class="btn btn-smm btn-danger" ng-click="removeFranchise(item)" tooltip="Excluir">
-                                                    <span class="fa fa-trash-o"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" ng-if="propertyType == 'VEHICLE' || propertyType == 'LIFE'">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <!-- <div class="panel-heading">Dados da Cobertura</div> -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-12 sessions-policyform">
-                                <p>Dados da Cobertura</p>
-                                <hr />
-                            </div>
-                            <div class="col-md-4">
-                                <label>Cobertura</label>
-                                <div class="form-group">
-                                    <select type="radio" name="optionsCoverage" id="optionsRadios2" ng-model="policyCoverage.coverage.description"
-                                            class="form-control input-segoo" ng-options="y.value as y.name for y in coverages | orderBy:'+name'">
-                                        <option value="">-- Selecione --</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Valor (R$)</label>
-                                <input type="text" class="form-control input-segoo" name="valueCoverage"
-                                       ng-model="policyCoverage.value" ui-number-mask="2" ui-negative-number>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Observações</label>
-                                <textarea type="text" class="form-control input-segoo" name="commentsCoverage" rows="1" placeholder="Informe aqui mais detalhes da cobertura"
-                                          ng-model="policyCoverage.comments"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <button class="btn btn-primary" ng-click="addCoverage()" ng-disabled="policyCoverage.coverage.description == undefined">Adicionar</button>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row" ng-if="policy.policyCoverages.length > 0">
-                            <div class="panel-heading">Coberturas selecionadas</div>
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover" id="dataTables-example">
-                                        <thead>
-                                        <tr>
-                                            <th class="centralizer">Descrição</th>
-                                            <th class="centralizer">Valor (R$)</th>
-                                            <th class="centralizer">Observações</th>
-                                            <th class="centralizer">Ações</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="gradeU" ng-repeat="item in policy.policyCoverages">
-                                            <td class="centralizer">{{getDescription(item.coverage.description, propertyType)}}</td>
-                                            <td class="centralizer">{{item.value | currency:"R$ "}}</td>
-                                            <td class="centralizer">{{item.comments}}</td>
-                                            <td class="centralizer">
-                                                <a href="" class="btn btn-smm btn-danger" ng-click="removeCoverage(item)" tooltip="Excluir">
-                                                    <span class="fa fa-trash-o"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <button class="Button btn btn-primary" type="submit" ng-click="save()"
-                        v-busy="isBusy" v-pressable v-busy-label="Salvando, aguarde..." ng-disabled="isBusy">Salvar</button>
-                <button class="btn btn-default" ng-click="goBack()" ng-disabled="isBusy">Cancelar</button>
-            </div>
-        </div>
-    </form>
-    <br />
-    <br />
+    <!-- /.col-lg-12 -->
 </div>

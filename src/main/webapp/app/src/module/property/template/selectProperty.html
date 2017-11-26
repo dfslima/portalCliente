@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="title centralizer">Selecione o ramo para cadastrar a proposta</h3>
+</div>
+<div class="modal-body">
+
+    <form role="form" name="formProp">
+        <label>Ramo</label>
+        <i ng-class="{'fa fa-question-circle fa-fw fa-2x': property === undefined, 'fa fa-car fa-fw fa-2x': property === 'VEHICLE',
+					'fa fa-building-o fa-fw fa-2x': property === 'CONDOMINIUM','fa fa-home fa-fw fa-2x': property === 'RESIDENCE',
+					'fa fa-building fa-fw fa-2x': property === 'COMPANY','fa fa-life-ring fa-fw fa-2x': property === 'VESSEL',
+					'fa fa-male fa-fw fa-2x': property === 'LIFE','fa fa-camera fa-fw fa-2x': property === 'EQUIPMENT', 'fa fa-sitemap': property  === undefined}"    >
+
+        </i>
+        <select class="form-control "
+                ng-model="property"
+                ng-required="true"
+                ng-options="pro.value as pro.name for pro in properties">
+            <option value="">-- Selecione --</option>
+        </select>
+    </form>
+
+</div>
+<div class="modal-footer">
+
+    <button class="btn btn-sm btn-primary" ng-disabled="formProp.$invalid" ng-click="selected()">Selecionar</button>
+    <button class="btn btn-sm btn-warning" ng-click="cancel()">Cancelar</button>
+</div>

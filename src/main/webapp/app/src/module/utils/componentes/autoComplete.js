@@ -14,8 +14,8 @@ app.factory('autoComplete', function (insurerService, producerService, customerS
         return customerService.findAutoComplete(value);
     };
 
-    autoComplete.autoCompleteProperty = function (value) {
-        return propertyService.findAutoComplete(value);
+    autoComplete.autoCompleteProperty = function (value, propertyType, customerId) {
+        return propertyService.findAutoComplete(value, propertyType, customerId);
     };
 
     return autoComplete;

@@ -11,7 +11,7 @@ angular.module('PortalCliente.proposalManager', [])
             }
         });
 
-        $routeProvider.when('/create-proposal', {
+        $routeProvider.when('/create-proposal/:propertyType', {
             templateUrl: 'app/src/module/proposal/template/proposal.form.html',
             controller: 'createProposalController',
             resolve: {
@@ -21,7 +21,7 @@ angular.module('PortalCliente.proposalManager', [])
             }
         });
 
-        $routeProvider.when('/edit-proposal/:id', {
+        $routeProvider.when('/edit-proposal/:propertyType/:id', {
             templateUrl: 'app/src/module/proposal/template/proposal.form.html',
             controller: 'editProposalController',
             resolve: {

@@ -1,6 +1,5 @@
 package br.com.portalCliente.entity.proposal;
 
-import br.com.portalCliente.enumeration.ProposalStatus;
 import br.com.portalCliente.exception.PortalClienteException;
 import br.com.portalCliente.util.JpaUtils;
 import br.com.portalCliente.util.PaginationUtils;
@@ -126,8 +125,7 @@ public class ProposalAR extends JpaUtils {
     @SuppressWarnings("unchecked")
     public static List<Proposal> search(String proposal, String board, Integer customerId, String name, String cpfCnpj,
                                         Date startDate, Date endDate, Integer insurerId, Integer producerId,
-                                        Integer property, Integer propertyId, int firstResult, int maxResults, ProposalStatus status,
-                                        boolean situation) throws PortalClienteException {
+                                        int firstResult, int maxResults, int userId) throws PortalClienteException {
 
         StringBuilder sql = new StringBuilder("SELECT DISTINCT p FROM Proposal p");
         Map<String, Object> params = new HashMap<String, Object>();
@@ -140,11 +138,6 @@ public class ProposalAR extends JpaUtils {
         if (proposal != null && !proposal.isEmpty()) {
             validateSql(sql, "p.proposalNumber LIKE :proposal");
             params.put("proposal", "%" + proposal + "%");
-        }
-
-        if (property != null) {
-            validateSql(sql, "p.property.propertyType = :propertyType");
-            params.put("propertyType", property);
         }
 
         if (customerId != null) {
@@ -172,20 +165,6 @@ public class ProposalAR extends JpaUtils {
             params.put("producerId", producerId);
         }
 
-        if (status != null) {
-            validateSql(sql, "p.status = :status");
-            params.put("status", status.getValue());
-        } else {
-            if (situation) {
-                List<Integer> types = new ArrayList<>();
-                types.add(1);
-                types.add(2);
-                types.add(6);
-                validateSql(sql, "p.status in (:status)");
-                params.put("status", types);
-            }
-        }
-
         if (startDate != null && endDate != null) {
 
             validateSql(sql, "p.createdAt BETWEEN :startTransmissionDate AND :endTransmissionDate");
@@ -201,6 +180,9 @@ public class ProposalAR extends JpaUtils {
                 params.put("endTransmissionDate", endDate);
             }
         }
+
+        validateSql(sql, "p.user.id = :userId");
+        params.put("userId", userId);
 
         sql.append(" ORDER BY p.id DESC");
 
@@ -223,8 +205,7 @@ public class ProposalAR extends JpaUtils {
      * @return
      */
     public static long count(String proposal, String board, Integer customerId, String name, String cpfCnpj,
-                             Date startTransmissionDate, Date endTransmissionDate, Integer insurerId, Integer producerId,
-                             Integer propertyType, ProposalStatus status, boolean situation) throws PortalClienteException {
+                             Date startTransmissionDate, Date endTransmissionDate, Integer insurerId, Integer producerId, int userId) throws PortalClienteException {
 
         try {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT COUNT(*) FROM Proposal p");
@@ -238,11 +219,6 @@ public class ProposalAR extends JpaUtils {
             if (proposal != null && !proposal.isEmpty()) {
                 validateSql(sql, "p.proposalNumber LIKE :proposal");
                 params.put("proposal", "%" + proposal + "%");
-            }
-
-            if (propertyType != null) {
-                validateSql(sql, "p.property.propertyType = :propertyType");
-                params.put("propertyType", propertyType);
             }
 
             if (customerId != null) {
@@ -270,18 +246,6 @@ public class ProposalAR extends JpaUtils {
                 params.put("producerId", producerId);
             }
 
-            if (status != null) {
-                validateSql(sql, "p.status = :status");
-                params.put("status", status.getValue());
-            } else {
-                if (situation) {
-                    List<Integer> types = new ArrayList<Integer>();
-                    types.add(1, 6);
-                    validateSql(sql, "p.status in (:status)");
-                    params.put("status", types);
-                }
-            }
-
             if (startTransmissionDate != null && endTransmissionDate != null) {
 
                 validateSql(sql, "p.createdAt BETWEEN :startTransmissionDate AND :endTransmissionDate");
@@ -297,6 +261,9 @@ public class ProposalAR extends JpaUtils {
                     params.put("endTransmissionDate", endTransmissionDate);
                 }
             }
+
+            validateSql(sql, "p.user.id = :userId");
+            params.put("userId", userId);
 
             TypedQuery<Long> query = entityManager().createQuery(sql.toString(), Long.class);
             setParams(params, query);
@@ -323,7 +290,7 @@ public class ProposalAR extends JpaUtils {
 
         if (ProposalConsolidated == null) {
 
-            if (existsProposalForProperty(proposal.getProperty().getId(), proposal.getId())) {
+            if (existsProposalForProperty(proposal.getProperty().getId())) {
 
                 try {
 
@@ -348,10 +315,9 @@ public class ProposalAR extends JpaUtils {
      * para salvamento.
      *
      * @param propertyId
-     * @param ProposalId
      * @return
      */
-    public static boolean existsProposalForProperty(int propertyId, Integer ProposalId) throws PortalClienteException {
+    public static boolean existsProposalForProperty(int propertyId) throws PortalClienteException {
 
         CriteriaBuilder criteriaBuilder = criteriaBuilder();
         CriteriaQuery<Proposal> criteria = criteriaBuilder.createQuery(Proposal.class);
@@ -369,11 +335,11 @@ public class ProposalAR extends JpaUtils {
 
             // Verifica se a vigência da proposta encontrada para a propriedade selecionada ainda está dentro do prazo
             if (hasValidity(Proposal.getEndTerm())) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**

@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Placa:</strong> {{property.vehicle.vehicleLicensePlate}}
+            <div ng-if="property.vehicle.vehicleLicensePlate == undefined && property.propertyType == 'VEHICLE'">
+                <span class="badge required_update_licensePlate">
+                    AGUARDANDO ATUALIZAÇÃO DA PLACA DO VEÍCULO
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Modelo/Fabricação (Ano):</strong> {{property.vehicle.vehicleModelYear}}
+            <span ng-if="property.vehicle.vehicleModelYear != undefined && property.vehicle.vehicleRegisterYear != undefined">/</span>
+            {{property.vehicle.vehicleRegisterYear}}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Fabricante:</strong><span tooltip="{{property.vehicle.vehicleMakeName | hidetext:25}}">{{property.vehicle.vehicleMakeName
+            | chiptext:25}}</span>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Modelo:</strong> <span tooltip="{{property.vehicle.vehicleModelName | hidetext:25}}">{{property.vehicle.vehicleModelName
+            | chiptext:25}}</span>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Código FIPE:</strong> {{property.vehicle.vehicleCodeFipe}}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <strong>Chassi:</strong> {{property.vehicle.vehicleChassis}}
+        </div>
+    </div>
+
+</div>

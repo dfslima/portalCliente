@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-lg-4">
+        <div class="form-group">
+            <strong>Ocupação: </strong> {{condominiumDescription($parent.property.condominium.condominiumType)}}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <strong>Sub-ocupação: </strong> {{condominiumDescription($parent.property.condominium.condominiumSubtype)}}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <strong>Contato: </strong> {{$parent.property.contact}}
+        </div>
+    </div>
+
+</div>
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="form-group">
+            <strong>Telefone: </strong> {{maskPhone($parent.property.phone)}}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <strong>Celular: </strong> {{maskPhone($parent.property.mobilePhone)}}
+        </div>
+    </div>
+</div>

@@ -20,7 +20,7 @@ app.service('toast', function ($mdToast) {
 
         $mdToast.show({
             controller: 'ToastController',
-            templateUrl: 'app/src/componentes/toast/toast.template.html',
+            templateUrl: 'app/src/module/utils/componentes/toast/toast.template.html',
             hideDelay: time,
             position: getToastPosition(),
             resolve: {

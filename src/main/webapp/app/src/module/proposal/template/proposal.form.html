@@ -1,126 +1,95 @@
-<div class="row" style="float:left; margin-top:35px;">
-    <div class="col-lg-12">
-        <h4 class="page-header-custom" ng-show="!showType">Cadastro de seguradoras</h4>
-        <h4 class="page-header-custom" ng-show="showType">Alterar dados da seguradora</h4>
-    </div>
-</div>
-<form name="insurerForm" novalidate>
+<div class="style-form-policy">
     <div class="row">
-        <div class="col-lg-12">
-
-            <div class="panel panel-default">
-                <div class="panel-heading">Dados da seguradora</div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label>CNPJ<i class="colorRequired">*</i></label>
-                                    <input class="form-control"
-                                     ng-model="insurer.cnpj"
-                                     mask="99.999.999/9999-99"
-                                     onkeypress="return onlyNumber(event)"
-                                     onpaste="return onPastValidate(event)"
-                                     name="cnpj"
-                                     v-cpfcnpj
-                                     ng-minlength="14"
-                                     autocomplete="off"
-                                     placeholder="00.000.000/0000-00"
-                                     required/>
-
-                                    <span ng-show="insurerForm.cnpj.$invalid && validate" class="errorForm">
-	                  	                Informe um CNPJ válido
-	                                </span>
-
-                                    <span ng-show="invalidValueCnpj" class="errorForm">{{msg}}</span>
-
+        <div class="col-lg-12" style="margin-top: 35px;">
+            <h4 class="page-header-custom">Cadastro de propostas
+                <span style="font-weight: 600;"
+                      class="label-title-form custom-font-roboto">- Ramo {{propertyName}}</span>
+            </h4>
+        </div>
+    </div>
+    <form name="proposalForm" novalidate>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12 sessions-proposalForm">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p>Dados do segurado</p>
+                                    </div>
+                                    <div class="col-lg-6 text-edit-properties"
+                                         ng-show="isDisplayFields && customer.empty == undefined">
+                                        <label class="">
+                                            Para alterar, clique aqui!<i
+                                                class="fa fa-fw fa-long-arrow-right arrow-right-custom"></i>
+                                        </label>
+                                        <a href="" class="btn btn-info btn-xs" ng-click="clearCustomer()"
+                                           tooltip="Aterar proprietário">
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </a>
+                                    </div>
                                 </div>
+                                <hr/>
                             </div>
-
-                            <div class="col-lg-4">
+                        </div>
+                        <div class="row" ng-show="!isDisplayFields || customer.empty != undefined">
+                            <div class="col-lg-5 search-input">
                                 <div class="form-group">
-                                    <label>Razão Social<i class="colorRequired">*</i></label>
-                                    <input class="form-control" name="razao"
-                                           ng-model="insurer.corporateName"
+                                    <label>Nome/CPF-CNPJ<i class="colorRequired">*</i></label>
+                                    <input type="text" ng-model="customer" class="form-control "
                                            autocomplete="off"
-                                           placeholder="Razão Social"
-                                           maxlength="80" required/>
-
-                                    <span ng-show="insurerForm.razao.$invalid && validate" class="errorForm">
-                                            Informe a Razão Social
+                                           name="customer" required
+                                           placeholder="Clique para selecionar um proprietário"
+                                           typeahead="item as showNameCustomer(item) +' - '+ maskCpfCnpj(item.cpfCnpj) for item in autoCompleteCustomer($viewValue)"
+                                           typeahead-on-select="onSelect($item)"/>
+                                    
+                                    <span ng-show="proposalForm.customer.$invalid && validate" class="errorForm">
+                                        O segurado precisa ser preenchido.
+                                    </span>
+                                    
+                                    <span ng-show="!validateCustomer() && validate && !proposalForm.customer.$invalid" class="errorForm">
+                                        Informe um segurado válido
                                     </span>
                                 </div>
                             </div>
-
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label>Nome Fantasia</label>
-                                    <input class="form-control"
-                                           ng-model="insurer.tradeName"
-                                           maxlength="80"
-                                           placeholder="Nome Fantasia"
-                                           autocomplete="off"/>
-                                </div>
-                            </div>
-
                         </div>
-
-
-                        <div class="col-lg-12">
-
-                            <div class="col-lg-4">
+                        <div class="row" ng-show="isDisplayFields && customer.empty == undefined">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Site</label>
-                                    <input class="form-control"
-                                           ng-model="insurer.website"
-                                           maxlength="50"
-                                           placeholder="www.meusite.com"
-                                           autocomplete="off"/>
+                                    <strong>CPF/CNPJ:</strong> {{maskCpfCnpj(customer.cpfCnpj)}}
                                 </div>
                             </div>
-
-
-                            <div class="col-lg-4">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Telefone</label>
-                                    <input autocomplete="off"
-                                     class="form-control"
-                                     ng-model="insurer.phone"
-                                     placeholder="(00) 00000-0000"
-                                     ng-minlength="10"
-                                     name="phone"
-                                     ui-br-phone-number>
+                                    <strong>Nome:</strong>
+                                    <span ng-if="customer.type == 1" tooltip="{{customer.name | hidetext:25}}">{{customer.name
+                                        | chiptext:25}}</span>
+                                    <span ng-if="customer.type == 2"
+                                           tooltip="{{customer.corporateName | hidetext:25}}">{{customer.corporateName |
+                                        chiptext:25}}</span>
                                 </div>
                             </div>
-
-                            <div class="col-lg-4">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Celular<i class="colorRequired">*</i></label>
-                                    <input class="form-control" autocomplete="off" placeholder="(00) 00000-0000"
-                                           ng-model="insurer.mobilePhone" ui-br-phone-number required name="mobilePhone">
-
-                                    <span ng-show="insurerForm.mobilePhone.$invalid && validate" class="errorForm">
-						                   	Informe um número de celular válido
-						               	</span>
+                                    <strong>Telefone:</strong> {{maskPhone(customer.phone)}}
                                 </div>
                             </div>
-
                         </div>
-
-                        <div class="col-lg-12">
-
-                            <div class="col-lg-4">
+                        <div class="row" ng-show="isDisplayFields && customer.empty == undefined">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>E-mail<i class="colorRequired">*</i></label>
-                                    <input class="form-control" ng-model="insurer.email" type="text" v-email lower-case
-                                           autocomplete="off"
-                                           name="inputemail" maxlength="50" required placeholder="exemplo@email.com"/>
-
-                                    <span ng-show="insurerForm.inputemail.$invalid && validate" class="errorForm">
-						                   	Informe um e-mail válido
-                                    </span>
-
+                                    <strong>E-mail:</strong> {{customer.email}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Celular:</strong> {{maskPhone(customer.mobilePhone)}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Observações:</strong> {{customer.observation}}
                                 </div>
                             </div>
                         </div>
@@ -128,15 +97,404 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row" ng-include="formAddress">
-    </div>
+        <div class="row" ng-if="!isFleet">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- <div class="panel-heading">Dados da Propriedade</div> -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12 sessions-proposalForm">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p>Dados da Propriedade</p>
+                                    </div>
+                                    <div class="col-lg-6 text-edit-properties" ng-if="propertyDetails">
+                                        <label class="">
+                                            Para alterar, clique aqui!<i
+                                                class="fa fa-fw fa-long-arrow-right arrow-right-custom"></i>
+                                        </label>
+                                        <a href="" class="btn btn-info btn-xs" ng-click="clearProperty()"
+                                           tooltip="Aterar propriedade">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <hr/>
+                            </div>
+                            <div class="col-md-5 search-input">
+                                <div class="form-group" ng-if="!propertyDetails">
 
-    <div class="row">
-        <div class="col-md-12">
-            <button type="submit" class="Button btn btn-primary" v-busy="isBusy" ng-click="save(insurerForm)" v-pressable v-busy-label="Salvando">Salvar</button>
-            <button class="btn btn-default" ng-click="goBack()">Cancelar</button>
+                                    <label ng-show="!editValue">Detalhes<i class="colorRequired">*</i></label>
+                                    <label ng-show="editValue">Placa<i class="colorRequired">*</i></label>
+
+                                    <input ng-if="!editValue" type="text" ng-model="propertyData.name"
+                                           class="form-control " autocomplete="off"
+                                           name="property" placeholder="Clique para selecionar uma propriedade"
+                                           ng-disabled="propertyList.length == 0 || customer == undefined"
+                                           typeahead="item as returnNames(item) for item in autoCompleteProperty($viewValue, propertyType, customer.id)"
+                                           typeahead-on-select="onSelectProperty($item)"
+                                           required/>
+
+                                    <input ng-if="editValue" type="text"
+                                           ng-model="property.vehicle.vehicleLicensePlate"
+                                           class="form-control " autocomplete="off"
+                                           name="property" placeholder="Clique para selecionar uma propriedade"
+                                           ng-disabled="propertyList.length == 0 || customer == undefined"
+                                           typeahead="item as returnNames(item) for item in autoCompleteProperty($viewValue, propertyType, customer.id)"
+                                           typeahead-on-select="onSelectProperty($item)" mask="@@@-9999" upper-Case
+                                           restrict="reject"
+                                           required/>
+
+                                    <span ng-show="proposalForm.property.$invalid && validate && !editValue"
+                                          class="errorForm">
+                           A descrição precisa ser preenchida.
+                           </span>
+                                    <span ng-show="proposalForm.property.$invalid && validate && editValue"
+                                          class="errorForm">
+                           A placa precisa ser preenchida.
+                           </span>
+                                    <span ng-show="erroProperty" class="errorForm">
+                           Já existe uma proposta vigente para a propriedade informada.
+                           </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div ng-if="propertyDetails" ng-include="details">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>
-<br/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- <div class="panel-heading"></div> -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div class="sessions-proposalForm">
+                                    <p>Dados da Proposta</p>
+                                    <hr/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 search-input">
+                                        <div class="form-group">
+                                            <label>Seguradora<i class="colorRequired">*</i></label>
+                                            <input type="text" ng-model="insurer.corporateName"
+                                                   class="form-control " name="insurer"
+                                                   required placeholder="Clique para selecionar uma seguradora"
+                                                   autocomplete="off"
+                                                   typeahead="item as item.corporateName for item in autoCompleteInsurer($viewValue)"
+                                                   typeahead-on-select="onSelectInsurer($item)"
+                                                   ng-disabled="property === '' || property === undefined || erroProperty && policy.fleets.length == 0 || erroProperty && policy.fleets.length > 0 && !isFleet"/>
+                                            </span>
+                                            </p>
+                                            <span ng-show="proposalForm.insurer.$invalid && validate" class="errorForm">
+                                 A seguradora precisa ser preenchida.
+                                 </span>
+                                            <span ng-show="!validateInsurer() && validate && !proposalForm.insurer.$invalid"
+                                                  class="errorForm">
+                                 Informe uma Seguradora válida
+                                 </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 search-input">
+                                        <div class="form-group">
+                                            <label>Produtor<i class="colorRequired">*</i></label>
+                                            <input type="text" ng-model="producer.name" class="form-control "
+                                                   name="producer"
+                                                   required placeholder="Clique para selecionar um produtor"
+                                                   autocomplete="off"
+                                                   typeahead="item as item.email for item in autoCompleteProducer($viewValue)"
+                                                   typeahead-on-select="onSelectProducer($item)"
+                                                   ng-disabled="insurer === '' || insurer === undefined"
+                                            />
+                                            <span ng-show="proposalForm.producer.$invalid && validate" class="errorForm">
+                                 O produtor precisa ser preenchido.
+                                 </span>
+                                            <span ng-show="!validateProducer() && validate && !proposalForm.producer.$invalid"
+                                                  class="errorForm">
+                                 Informe um Produtor válido
+                                 </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Nº de Parcelas<i class="colorRequired">*</i></label>
+                                            <select class="form-control " name="installments" required
+                                                    ng-model="policy.installmentsNumber"
+                                                    ng-change="enabedFields = true"
+                                                    ng-disabled="!validateValue">
+                                                <option value="">- selecione -</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            <span ng-show="proposalForm.installments.$invalid && validate"
+                                                  class="errorForm">
+                                 Selecione uma parcela.
+                                 </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Prêmio Líquido (R$) <i class="colorRequired">*</i></label>
+                                            <input type="text" class="form-control "
+                                                   ng-model="policy.netAward"
+                                                   ng-disabled="!enabedFields"
+                                                   ng-change="calculateValues(true, true, 'FOR_NET_AWARD')"
+                                                   ui-number-mask="2" , ui-negative-number restrict="reject">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Nº da Proposta<i class="colorRequired">*</i></label>
+                                            <input class="form-control " name="proposalNumber" required
+                                                   autocomplete="off" ng-model="policy.proposalNumber"
+                                                   placeholder="Ex.: 007"
+                                                   ng-disabled="!enabedFields"
+                                                   maxlength="25" onkeypress="return onlyNumber(event)">
+                                            <span ng-show="proposalForm.proposalNumber.$invalid && validate"
+                                                  class="errorForm">
+                                 Informe o n&uacute;mero da proposta.
+                                 </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="sessions-proposalForm">
+                                    <p>Comissionamento</p>
+                                    <hr/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group input-brokerage">
+                                            <label>Comissão Corretora (%)<i class="colorRequired">*</i></label>
+
+                                            <input class="form-control "
+                                                   ng-model="policy.brokerageCommissionPercent"
+                                                   ng-change="calculateValues(false, false, 'FOR_BROKERAGE')"
+                                                   ng-disabled="!enabedFields"
+                                                   ui-percentage-mask max="1" name="brokerageComissionPercent"
+                                                   placeholder="Ex.: 10%">
+
+                                            <span ng-show="proposalForm.brokerageComissionPercent.$invalid && validate"
+                                                  class="errorForm">
+                                 			Informe a comiss&atilde;o da corretora.
+                                 </span>
+
+                                            <span ng-show="proposalForm.brokerageComissionPercent.$error.max"
+                                                  class="errorForm">
+                                 			A comiss&atilde;o da corretora n&atilde;o pode exceder 100%
+                                 </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group input-producer">
+                                            <label>Comissão Produtor (%)<i class="colorRequired">*</i></label>
+                                            <input name="producerComission" class="form-control "
+                                                   ng-model="policy.producerCommissionPercent"
+                                                   ng-change="calculateValues(false, false, 'FOR_PRODUCER')"
+                                                   ng-disabled="!enabedFields"
+                                                   ui-percentage-mask max="1"
+                                                   placeholder="ex.: 20%">
+
+                                            <span ng-show="proposalForm.producerComission.$invalid && validate"
+                                                  class="errorForm">
+                                 			Informe a comiss&atilde;o do produtor.
+                                 </span>
+
+                                            <span ng-show="proposalForm.producerComission.$error.max" class="errorForm">
+                                 			A comiss&atilde;o do produtor n&atilde;o pode exceder 100%
+                                 </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" ng-if="propertyType === 'VEHICLE'">
+                                        <div class="form-group input-workedCommission">
+                                            <label>Comissão Trabalhada (%)<i class="colorRequired">*</i></label>
+                                            <input class="form-control "
+                                                   ng-model="policy.policyCommissionPercent"
+                                                   name="policyCommissionPercent"
+                                                   ng-disabled="editValue"
+                                                   ng-change="calculateValues(false, false, 'FOR_POLICY')"
+                                                   ui-percentage-mask ui-percentage-value min="0.0001" max="1"
+                                                   placeholder="Ex.: 30%"
+                                                   autocomplete="off">
+
+                                            <span ng-show="proposalForm.policyCommissionPercent.$error.max"
+                                                  class="errorForm">
+                                 			A comiss&atilde;o trabalhada n&atilde;o pode exceder 100%
+                                 </span>
+
+                                            <span ng-show="proposalForm.policyCommissionPercent.$error.min"
+                                                  class="errorForm">
+                                 			A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
+                                 </span>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3" ng-if="propertyType !== 'VEHICLE'">
+                                        <div class="form-group input-workedCommission">
+                                            <label>Comissão Trabalhada (%)<i class="colorRequired">*</i></label>
+                                            <input class="form-control "
+                                                   ng-model="policy.policyCommissionPercent"
+                                                   name="policyCommissionPercent"
+                                                   ng-disabled="editValue"
+                                                   ng-change="calculateValues(false, false, 'FOR_POLICY')"
+                                                   ui-percentage-mask ui-percentage-value min="0.0001"
+                                                   placeholder="Ex.: 30%">
+
+                                            <span ng-show="proposalForm.policyCommissionPercent.$error.min"
+                                                  class="errorForm">
+                                 			A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
+                                 </span>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <div class="sessions-proposalForm">
+                                    <p>Desconto (-) / Agravamento (+)</p>
+                                    <hr/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group input-discount">
+                                            <label>Desconto Corretora (%)</label>
+                                            <input class="form-control " ng-model="policy.discountBrokerage"
+                                                   ng-disabled="!enabedFields" name="discountBrokerage"
+                                                   ng-change="calculateValues(true, false, 'FOR_DISCOUNT_BROKERAGE')"
+                                                   ui-percentage-mask max="brokerageMax"
+                                                   placeholder="Ex.: 5%">
+
+                                            <span ng-show="proposalForm.discountBrokerage.$invalid" class="errorForm">
+                                 			Desconto excede a comiss&atilde;o da corretora
+                                 </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group input-discount">
+                                            <label>Desconto Produtor (%)</label>
+                                            <input class="form-control " ng-model="policy.discount"
+                                                   ng-disabled="!enabedFields" name="discount"
+                                                   max="producerMax"
+                                                   ng-change="calculateValues(true, false, 'FOR_DISCOUNT')"
+                                                   ui-percentage-mask
+                                                   placeholder="Ex.: 10%">
+
+                                            <span ng-show="proposalForm.discount.$invalid" class="errorForm">
+                                 			Desconto excede a comiss&atilde;o do produtor
+                                 </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group input-aggravation">
+                                            <label>Agravamento (%)</label>
+                                            <input class="form-control " ng-model="policy.aggravation"
+                                                   ng-disabled="!enabedFields"
+                                                   ng-change="calculateValues(false, true, 'FOR_AGGRAVATION')"
+                                                   ui-percentage-mask
+                                                   placeholder="Ex.: 10%">
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="sessions-proposalForm">
+                                    <p>Vig&ecirc;ncia</p>
+                                    <hr/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Inicio da vig&ecirc;ncia<i class="colorRequired">*</i></label>
+                                            <input type="text" name="startTerm" class="form-control "
+                                                   ng-model="policy.startTerm" mask="99/99/9999"
+                                                   onkeypress="return onlyNumber(event)"
+                                                   ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/"
+                                                   ng-disabled="!enabedFields"
+                                                   ng-change="endCallYear(proposalForm.startTerm.$invalid, proposalForm.endTerm.$invalid)"
+                                                   required/>
+                                            <span ng-if="proposalForm.startTerm.$invalid" class="errorForm">
+                                 Informe uma data v&aacute;lida</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Fim da vig&ecirc;ncia <i class="colorRequired">*</i></label>
+                                            <input type="text" name="endTerm" class="form-control "
+                                                   ng-model="policy.endTerm" mask="99/99/9999"
+                                                   onkeypress="return onlyNumber(event)"
+                                                   ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/"
+                                                   ng-disabled="!enabedFields"
+                                                   ng-change="startCallYear(proposalForm.endTerm.$invalid, proposalForm.startTerm.$invalid)"
+                                                   required/>
+                                            <span class="errorForm" ng-if="proposalForm.endTerm.$incvalid">Informe uma data v&aacute;lida</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Data de transmiss&atilde;o <i class="colorRequired">*</i></label>
+                                            <input type="text" name="dateTransmission" class="form-control "
+                                                   ng-model="policy.dateTransmission" mask="99/99/9999"
+                                                   onkeypress="return onlyNumber(event)"
+                                                   ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/"
+                                                   ng-disabled="!enabedFields" required/>
+                                            <span class="errorForm" ng-if="proposalForm.dateTransmission.$invalid">  Informe uma data v&aacute;lida</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-md-offset-2"
+                                         ng-if="!validateDates(policy.startTerm, policy.endTerm)">
+                              <span class="errorForm">
+                              O período informado é inválido.
+                              </span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <br/>
+                                        <div class="form-group">
+                                            <label>Observações</label>
+                                            <textarea class="form-control " ng-model="policy.comments"
+                                                      maxlength="450"
+                                                      placeholder="Observações acerca da proposta"
+                                                      ng-disabled="!enabedFields" rows="4"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="Button btn btn-primary" type="submit" ng-click="save()"
+                        v-busy="isBusy" v-pressable v-busy-label="Salvando, aguarde..." ng-disabled="isBusy">Salvar
+                </button>
+                <button class="btn btn-default" ng-click="goBack()" ng-disabled="isBusy">Cancelar</button>
+            </div>
+        </div>
+    </form>
+    <br/>
+    <br/>
+</div>
