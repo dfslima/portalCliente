@@ -1,5 +1,6 @@
 package br.com.portalCliente.entity.proposal;
 
+import br.com.portalCliente.entity.franchise.Franchise;
 import br.com.portalCliente.exception.PortalClienteException;
 import br.com.portalCliente.util.JpaUtils;
 import br.com.portalCliente.util.PaginationUtils;
@@ -294,6 +295,10 @@ public class ProposalAR extends JpaUtils {
 
                 try {
 
+                    for (Franchise franchise: proposal.getFranchises()) {
+                        franchise.setProposal(proposal);
+                    }
+
                     proposal.persist();
 
                 } catch (PortalClienteException e) {
@@ -367,17 +372,33 @@ public class ProposalAR extends JpaUtils {
     }
 
     @Transactional
-    public static Proposal edit(Proposal Proposal) throws PortalClienteException {
+    public static Proposal edit(Proposal proposal) throws PortalClienteException {
 
         try {
-            Proposal ProposalValidate = find(Proposal.getId());
-            Proposal.merge();
+            Proposal proposalValidate = find(proposal.getId());
+
+            if (Objects.equals(proposal.getProposalNumber(), proposalValidate.getProposalNumber())
+                    && !Objects.equals(proposal.getId(), proposalValidate.getId())) {
+                throw new PortalClienteException(MESSAGE_ERROR_EDIT_PROPOSAL);
+            }
+
+            List<Franchise> franchises = Franchise.findByProposal(proposal.getId());
+
+            for (Franchise franchise: franchises) {
+                franchise.remove();
+            }
+
+            for (Franchise franchise: proposal.getFranchises()) {
+                franchise.setProposal(proposal);
+            }
+
+            proposal.merge();
 
         } catch (Exception e) {
             throw new PortalClienteException(MESSAGE_ERROR_GENERAL);
         }
 
-        return Proposal;
+        return proposal;
     }
 
     /*

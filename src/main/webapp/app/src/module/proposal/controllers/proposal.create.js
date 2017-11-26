@@ -1,4 +1,4 @@
-app.controller('createProposalController', function ($route, $scope, $location, $rootScope, $modal, $window, $filter,
+app.controller('createProposalController', function ($route, $scope, $location, $rootScope, $modal, $window, $filter, franchiseFactory, franchiseDescriptionFactory,
                                                      proposalFactory, autoComplete, maskFactory, proposalService, customerService, propertyService,
                                                      propertyFactory, validationFactory, insurerService, producerService, userFactory, toast) {
 
@@ -7,11 +7,13 @@ app.controller('createProposalController', function ($route, $scope, $location, 
     angular.extend($scope, validationFactory);
     angular.extend($scope, proposalFactory);
     angular.extend($scope, propertyFactory);
+    angular.extend($scope, franchiseFactory);
 
     $scope.propertyType = $route.current.params.propertyType.toUpperCase();
     $scope.details = propertyFactory.details($scope.propertyType);
     $scope.proposalFactory = proposalFactory;
     $scope.propertyName = propertyFactory.propertyName($scope.propertyType);
+    $scope.franchiseTypes = franchiseDescriptionFactory.franchiseForPropertyType($scope.propertyType);
 
     var validaInsurer = false;
 
@@ -21,6 +23,8 @@ app.controller('createProposalController', function ($route, $scope, $location, 
 
     $scope.producer = {};
     $scope.proposal = {};
+    $scope.franchise = {};
+    $scope.proposal.franchises = [];
     $scope.editPropertyView = true;
     $scope.proposal.startTerm = moment().format('DD/MM/YYYY');
     $scope.proposal.dateTransmission = moment().format('DD/MM/YYYY');
@@ -232,5 +236,44 @@ app.controller('createProposalController', function ($route, $scope, $location, 
         $scope.proposal.proposalCommission = (parseFloat($scope.proposal.netAward) * parseFloat($scope.proposal.proposalCommissionPercent)).toFixed(2);
         $scope.proposal.producerCommission = (parseFloat($scope.proposal.netAward) * parseFloat($scope.proposal.producerCommissionPercent)).toFixed(2);
         $scope.proposal.brokerageCommission = (parseFloat($scope.proposal.netAward) * parseFloat($scope.proposal.brokerageCommissionPercent)).toFixed(2);
-    }
+    };
+
+    // Adiciona uma ou várias franquias à proposta
+    $scope.addFranchise = function (franchise) {
+
+        if ($scope.proposal.franchises === undefined) {
+            $scope.proposal.franchises = [];
+        }
+
+        var quantity = $scope.proposal.franchises.length;
+
+        if (quantity > 0) {
+
+            var exist = false;
+
+            for (var i = 0; i < quantity; i++) {
+                var item = $scope.proposal.franchises[i];
+
+                if (item.franchiseType === franchise.franchiseType) {
+                    exist = true;
+                    i = quantity;
+                }
+            }
+            if (!exist) {
+                $scope.proposal.franchises.push(franchise);
+            }
+
+            exist = false;
+        }
+        else {
+            $scope.proposal.franchises.push(franchise);
+        }
+
+        $scope.franchise = {};
+    };
+
+    // Remove uma franquia inserida no objeto apólice
+    $scope.removeFranchise = function (item) {
+        $scope.proposal.franchises.splice($scope.proposal.franchises.indexOf(item), 1);
+    };
 });

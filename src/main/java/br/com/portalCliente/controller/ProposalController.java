@@ -84,7 +84,7 @@ public class ProposalController extends AbstractController {
     @ResponseBody
     @Transactional
     public ResponseEntity<String> showJson(@PathVariable("id") Integer id) throws PortalClienteException {
-        return new ResponseEntity<String>(Proposal.find(id).toJson(includeParam(), excludeParam()), setHeaders(), HttpStatus.OK);
+        return new ResponseEntity<String>(Proposal.find(id).toJson(includeParam("franchises"), excludeParam()), setHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")

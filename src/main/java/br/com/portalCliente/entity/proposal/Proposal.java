@@ -1,6 +1,7 @@
 package br.com.portalCliente.entity.proposal;
 
 import br.com.portalCliente.entity.customer.Customer;
+import br.com.portalCliente.entity.franchise.Franchise;
 import br.com.portalCliente.entity.insurer.Insurer;
 import br.com.portalCliente.entity.producer.Producer;
 import br.com.portalCliente.entity.property.Property;
@@ -129,6 +130,9 @@ public class Proposal extends ProposalAR {
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     private User user;
 
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name ="PROPOSAL_ID")
+    private List<Franchise> franchises;
 
     /**
      * Método para retonar o id do objeto Apólice
@@ -508,6 +512,14 @@ public class Proposal extends ProposalAR {
 
     public void setProducer(Producer producer) {
         this.producer = producer;
+    }
+
+    public List<Franchise> getFranchises() {
+        return franchises;
+    }
+
+    public void setFranchises(List<Franchise> franchises) {
+        this.franchises = franchises;
     }
 
     private static DateTransformer DATE_TRANSFORM = new DateTransformer("yyyy-MM-dd'T'HH:mm:ss.SSS");

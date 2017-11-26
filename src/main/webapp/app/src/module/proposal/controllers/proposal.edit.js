@@ -1,4 +1,4 @@
-app.controller('editProposalController', function ($route, $scope, $location, $rootScope, $modal, $window, $filter, proposal,
+app.controller('editProposalController', function ($route, $scope, $location, $rootScope, $modal, $window, $filter, proposal, franchiseFactory, franchiseDescriptionFactory,
                                                      proposalFactory, autoComplete, maskFactory, proposalService, customerService, propertyService,
                                                      propertyFactory, validationFactory, insurerService, producerService, userFactory, toast) {
 
@@ -7,6 +7,7 @@ app.controller('editProposalController', function ($route, $scope, $location, $r
     angular.extend($scope, validationFactory);
     angular.extend($scope, proposalFactory);
     angular.extend($scope, propertyFactory);
+    angular.extend($scope, franchiseFactory);
 
     $scope.propertyType = $route.current.params.propertyType.toUpperCase();
     $scope.details = propertyFactory.details($scope.propertyType);
@@ -234,4 +235,43 @@ app.controller('editProposalController', function ($route, $scope, $location, $r
         $scope.proposal.producerCommission = (parseFloat($scope.proposal.netAward) * parseFloat($scope.proposal.producerCommissionPercent)).toFixed(2);
         $scope.proposal.brokerageCommission = (parseFloat($scope.proposal.netAward) * parseFloat($scope.proposal.brokerageCommissionPercent)).toFixed(2);
     }
+
+    // Adiciona uma ou várias franquias à proposta
+    $scope.addFranchise = function (franchise) {
+
+        if ($scope.proposal.franchises === undefined) {
+            $scope.proposal.franchises = [];
+        }
+
+        var quantity = $scope.proposal.franchises.length;
+
+        if (quantity > 0) {
+
+            var exist = false;
+
+            for (var i = 0; i < quantity; i++) {
+                var item = $scope.proposal.franchises[i];
+
+                if (item.franchiseType === franchise.franchiseType) {
+                    exist = true;
+                    i = quantity;
+                }
+            }
+            if (!exist) {
+                $scope.proposal.franchises.push(franchise);
+            }
+
+            exist = false;
+        }
+        else {
+            $scope.proposal.franchises.push(franchise);
+        }
+
+        $scope.franchise = {};
+    };
+
+    // Remove uma franquia inserida no objeto apólice
+    $scope.removeFranchise = function (item) {
+        $scope.proposal.franchises.splice($scope.proposal.franchises.indexOf(item), 1);
+    };
 });

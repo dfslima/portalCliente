@@ -6,6 +6,7 @@ import flexjson.JSONSerializer;
 public abstract class MessageUtils {
 
 	public static final String MESSAGE_ERROR_GENERAL = "Ops! Ocorreu um erro ao salvar a seguradora. Favor, tente novamente";
+	public static final String MESSAGE_ERROR_EDIT_PROPOSAL = "Já existe uma proposta cadastrada com esse número";
 
 	private boolean erro = false;
 	private String message;
