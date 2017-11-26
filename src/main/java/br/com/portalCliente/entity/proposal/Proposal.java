@@ -1,6 +1,8 @@
 package br.com.portalCliente.entity.proposal;
 
 import br.com.portalCliente.entity.customer.Customer;
+import br.com.portalCliente.entity.insurer.Insurer;
+import br.com.portalCliente.entity.producer.Producer;
 import br.com.portalCliente.entity.property.Property;
 import br.com.portalCliente.entity.user.User;
 import br.com.portalCliente.util.dateUtilities.PortalClienteDateTransformer;
@@ -27,9 +29,6 @@ public class Proposal extends ProposalAR {
     @Temporal(TemporalType.DATE)
     private Date createdAt;
 
-    @Column(name = "INSURER_ID")
-    private Integer insuranceId;
-
     // PRÊMIO LÍQUIDO
     @Column(name = "NET_AWARD")
     private double netAward;
@@ -55,16 +54,9 @@ public class Proposal extends ProposalAR {
     @Column(name = "PROPOSAL_NUMBER", unique = true)
     private String proposalNumber;
 
-    // NÚMERO DA APÓLICE
-    @Column(name = "POLICY_NUMBER", unique = true)
-    private String policyNumber;
-
     // CÓDIGO DE AUTENTICAÇÃO
     @Column(name = "AUTHENTICATION_CODE", unique = true, length = 40)
     private String authenticationCode;
-
-    @Column(name = "PRODUCER_ID")
-    private Integer producerId;
 
     // COMISSÃO DO PRODUTOR
     @Column(name = "PRODUCER_COMMISSION")
@@ -81,12 +73,12 @@ public class Proposal extends ProposalAR {
     private float brokerageCommissionPercent;
 
     // COMISSÃO DA APOLICE
-    @Column(name = "POLICY_COMMISSION")
-    private double policyCommission;
+    @Column(name = "PROPOSAL_COMMISSION")
+    private double proposalCommission;
 
     // COMISSÃO DA APOLICE
-    @Column(name = "POLICY_COMMISSION_PERCENT")
-    private float policyCommissionPercent;
+    @Column(name = "PROPOSAL_COMMISSION_PERCENT")
+    private float proposalCommissionPercent;
 
     // INÍCIO DA VIGÊNCIA
     @NotNull
@@ -107,8 +99,8 @@ public class Proposal extends ProposalAR {
 
     // DATA DE EMISSÃO DA APÓLICE
     @Temporal(TemporalType.DATE)
-    @Column(name = "DATE_TRANSMISSION_POLICY")
-    private Date dateTransmissionPolicy;
+    @Column(name = "DATE_TRANSMISSION_PROPOSAL")
+    private Date dateTransmissionProposal;
 
     // OBSERVAÇÃO
     @Column(name = "COMMENTS", length = 500)
@@ -124,6 +116,14 @@ public class Proposal extends ProposalAR {
     @ManyToOne
     @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "INSURER_ID", referencedColumnName = "ID")
+    private Insurer insurer;
+
+    @ManyToOne
+    @JoinColumn(name = "PRODUCER_ID", referencedColumnName = "ID")
+    private Producer producer;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
@@ -146,32 +146,6 @@ public class Proposal extends ProposalAR {
      */
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getProducerId() {
-        return producerId;
-    }
-
-    public void setProducerId(Integer producerId) {
-        this.producerId = producerId;
-    }
-
-    /**
-     * Método para retonar o id da Seguradora do objeto Apólice
-     *
-     * @return the insurerId
-     */
-    public Integer getInsuranceId() {
-        return insuranceId;
-    }
-
-    /**
-     * Método para setar o id da seguradora no objeto Apólice
-     *
-     * @param insuranceId the insurerId to set
-     */
-    public void setInsuranceId(Integer insuranceId) {
-        this.insuranceId = insuranceId;
     }
 
     /**
@@ -281,24 +255,6 @@ public class Proposal extends ProposalAR {
      */
     public void setProposalNumber(String proposalNumber) {
         this.proposalNumber = proposalNumber;
-    }
-
-    /**
-     * Método para retonar o Nº da Apólice do objeto Apólice
-     *
-     * @return the policyNumber
-     */
-    public String getPolicyNumber() {
-        return policyNumber;
-    }
-
-    /**
-     * Método para setar o Nº da Apólice no objeto Apólice
-     *
-     * @param policyNumber the policyNumber to set
-     */
-    public void setPolicyNumber(String policyNumber) {
-        this.policyNumber = policyNumber;
     }
 
     /**
@@ -430,17 +386,17 @@ public class Proposal extends ProposalAR {
      *
      * @return
      */
-    public Date getDateTransmissionPolicy() {
-        return dateTransmissionPolicy;
+    public Date getDateTransmissionProposal() {
+        return dateTransmissionProposal;
     }
 
     /**
      * Método para setar o Data de Transmissão da apólice
      *
-     * @param dateTransmissionPolicy
+     * @param dateTransmissionProposal
      */
-    public void setDateTransmissionPolicy(Date dateTransmissionPolicy) {
-        this.dateTransmissionPolicy = dateTransmissionPolicy;
+    public void setDateTransmissionProposal(Date dateTransmissionProposal) {
+        this.dateTransmissionProposal = dateTransmissionProposal;
     }
 
     /**
@@ -498,20 +454,20 @@ public class Proposal extends ProposalAR {
         this.customer = customer;
     }
 
-    public double getPolicyCommission() {
-        return policyCommission;
+    public double getProposalCommission() {
+        return proposalCommission;
     }
 
-    public void setPolicyCommission(double policyCommission) {
-        this.policyCommission = policyCommission;
+    public void setProposalCommission(double proposalCommission) {
+        this.proposalCommission = proposalCommission;
     }
 
-    public float getPolicyCommissionPercent() {
-        return policyCommissionPercent;
+    public float getProposalCommissionPercent() {
+        return proposalCommissionPercent;
     }
 
-    public void setPolicyCommissionPercent(float policyCommissionPercent) {
-        this.policyCommissionPercent = policyCommissionPercent;
+    public void setProposalCommissionPercent(float proposalCommissionPercent) {
+        this.proposalCommissionPercent = proposalCommissionPercent;
     }
 
     public int getPayedInstallments() {
@@ -538,6 +494,21 @@ public class Proposal extends ProposalAR {
         this.user = user;
     }
 
+    public Insurer getInsurer() {
+        return insurer;
+    }
+
+    public void setInsurer(Insurer insurer) {
+        this.insurer = insurer;
+    }
+
+    public Producer getProducer() {
+        return producer;
+    }
+
+    public void setProducer(Producer producer) {
+        this.producer = producer;
+    }
 
     private static DateTransformer DATE_TRANSFORM = new DateTransformer("yyyy-MM-dd'T'HH:mm:ss.SSS");
     private static DateTransformer DATE_TRANSFORM_BRL = new DateTransformer("dd/MM/yyyy");
@@ -560,7 +531,7 @@ public class Proposal extends ProposalAR {
     public static Proposal fromJson(String json) {
 
         return new JSONDeserializer<Proposal>().use(null, Proposal.class)
-                .use(Date.class, new PortalClienteDateTransformer("dd/MM/yyyy")).deserialize(json);
+                .use(Date.class, new PortalClienteDateTransformer("dd/MM/yyyy", "yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss.SSS")).deserialize(json);
     }
 
     /**

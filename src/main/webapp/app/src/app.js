@@ -46,6 +46,8 @@ var app =
 
         Restangular.setErrorInterceptor(function (response) {
 
+            $rootScope.isBusy = false;
+
             if (response.status == 400) {
                 toast.open('warning', response.data.message);
             }

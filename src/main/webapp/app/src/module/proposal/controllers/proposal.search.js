@@ -1,4 +1,4 @@
-app.controller('searchProposalController', function ($scope, $location, $rootScope, $modal, $window, $timeout, $route, $filter, validationFactory,
+app.controller('searchProposalController', function ($scope, $location, $rootScope, $modal, $window, $timeout, $route, $filter, validationFactory, toast,
                                                      paginationFactory, proposalService, propertyFactory, autoComplete, maskFactory, proposalFactory) {
 
     angular.extend($scope, paginationFactory);
@@ -8,31 +8,31 @@ app.controller('searchProposalController', function ($scope, $location, $rootSco
     angular.extend($scope, maskFactory);
     angular.extend($scope, validationFactory);
 
+    var customerId = 0;
+    var insurerId = 0;
+    var producerId = 0;
+
     $rootScope.isBusy = false;
     $scope.isShow = true;
 
     $scope.edit = function (id, propertyType) {
-        $location.path('/viewPolicy/' + propertyType.toLowerCase() + '/' + id);
+        $location.path('/edit-proposal/' + propertyType.toLowerCase() + '/' + id);
     };
 
     $scope.search = function () {
-
+        prepare();
         $scope.itens = [];
+        $rootScope.isBusy = true;
+        proposalService.count($scope.proposal, $scope.board, customerId, $scope.cpfCnpj,
+            $scope.startDate, $scope.endDate, insurerId, producerId).then(function (total) {
 
-        if (prepare()) {
-
-            $rootScope.isBusy = true;
-            proposalService.count($scope.proposal, $scope.board, customerId, $scope.cpfCnpj,
-                $scope.startDate, $scope.endDate, insurerId, producerId).then(function (total) {
-
-                if ($scope.validateSize(total.count)) {
-                    getList();
-                } else {
-                    $rootScope.isBusy = false;
-                    $scope.isShow = false;
-                }
-            });
-        }
+            if ($scope.validateSize(total.count)) {
+                getList();
+            } else {
+                $rootScope.isBusy = false;
+                $scope.isShow = false;
+            }
+        });
     };
 
     $scope.search();
@@ -52,10 +52,6 @@ app.controller('searchProposalController', function ($scope, $location, $rootSco
     $scope.onSelectProducer = function ($item) {
         $scope.producer = $item;
     };
-
-    var customerId = 0;
-    var insurerId = 0;
-    var producerId = 0;
 
     function prepare() {
 
@@ -89,8 +85,6 @@ app.controller('searchProposalController', function ($scope, $location, $rootSco
         } else {
             producerId = undefined;
         }
-
-        return true;
     }
 
     $scope.clear = function () {
@@ -140,5 +134,27 @@ app.controller('searchProposalController', function ($scope, $location, $rootSco
         } else {
             return 'P';
         }
+    };
+
+    $scope.remove = function (item) {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'app/src/module/proposal/template/proposal.delete.html',
+            size: 'sm',
+            controller: 'deleteProposalController',
+            resolve: {
+                proposal: function () {
+                    return item;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (response) {
+            toast.open(response.type, response.msg);
+
+            if(response.type != 'danger') {
+                $scope.search();
+            }
+        });
     };
 });

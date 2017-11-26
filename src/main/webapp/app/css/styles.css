@@ -586,3 +586,8 @@ li:hover {
 .logo-login {
     height: 60px;
 }
+
+.color-commission {
+    font-weight:bold;
+    color: #4cae4c;
+}

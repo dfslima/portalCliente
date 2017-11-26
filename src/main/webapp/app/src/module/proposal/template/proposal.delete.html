@@ -1,11 +1,13 @@
 <div class="modal-header">
-    <h3 class="title centralizer">Deseja remover esta seguradora?</h3>
+    <h3 class="title centralizer">Deseja remover esta proposta?</h3>
 </div>
 <div class="modal-body">
     <ul>
-        <label>Nome: </label> {{item.tradeName}}
+        <label>Nº da proposta: </label> {{item.proposalNumber}}
         <br />
-        <label>CNPJ: </label> {{item.cnpj}}
+        <label>Segurado: </label>
+        <span ng-if="item.customer.type == 1">{{item.customer.name</span>
+        <span ng-if="item.customer.type == 2">{{item.customer.corporateName}}</span>
     </ul>
 </div>
 <div class="modal-footer">

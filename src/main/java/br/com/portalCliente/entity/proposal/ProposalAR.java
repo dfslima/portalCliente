@@ -156,12 +156,12 @@ public class ProposalAR extends JpaUtils {
         }
 
         if (insurerId != null) {
-            validateSql(sql, "p.insuranceId = :insurerId");
+            validateSql(sql, "p.insurer.id = :insurerId");
             params.put("insurerId", insurerId);
         }
 
         if (producerId != null) {
-            validateSql(sql, "p.producerId = :producerId");
+            validateSql(sql, "p.producer.id = :producerId");
             params.put("producerId", producerId);
         }
 
@@ -237,12 +237,12 @@ public class ProposalAR extends JpaUtils {
             }
 
             if (insurerId != null) {
-                validateSql(sql, "p.insuranceId = :insurerId");
+                validateSql(sql, "p.insurer.id = :insurerId");
                 params.put("insurerId", insurerId);
             }
 
             if (producerId != null) {
-                validateSql(sql, "p.producerId = :producerId");
+                validateSql(sql, "p.producer.id = :producerId");
                 params.put("producerId", producerId);
             }
 

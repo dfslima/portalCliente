@@ -10,7 +10,6 @@ app.service('proposalService', function (Restangular, $rootScope, userFactory) {
             endTransmissionDate: endTransmissionDate,
             insurerId: insurerId,
             producerId: producerId,
-            property: property,
             firstResult: firstResult,
             maxResults: maxResults,
             userId: userFactory.getUser().id
@@ -40,8 +39,7 @@ app.service('proposalService', function (Restangular, $rootScope, userFactory) {
     };
 
     this.remove = function (policy) {
-        return Restangular.all('proposals/' + policy.id)
-            .customDELETE("", {fileRepositoryPath: $rootScope.brokerage.fileRepositoryPath}, {});
+        return Restangular.all('proposals/' + policy.id).customDELETE("", {}, {});
     };
 
     this.validate = function(propertyId) {

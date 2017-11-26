@@ -1,7 +1,12 @@
-<div class="style-form-policy">
+<div class="style-form-proposal">
     <div class="row">
         <div class="col-lg-12" style="margin-top: 35px;">
-            <h4 class="page-header-custom">Cadastro de propostas
+            <h4 class="page-header-custom" ng-if="!isEdit">Cadastro de propostas
+                <span style="font-weight: 600;"
+                      class="label-title-form custom-font-roboto">- Ramo {{propertyName}}</span>
+            </h4>
+
+            <h4 class="page-header-custom" ng-if="isEdit">Alteração dos dados da proposta
                 <span style="font-weight: 600;"
                       class="label-title-form custom-font-roboto">- Ramo {{propertyName}}</span>
             </h4>
@@ -43,14 +48,12 @@
                                            placeholder="Clique para selecionar um proprietário"
                                            typeahead="item as showNameCustomer(item) +' - '+ maskCpfCnpj(item.cpfCnpj) for item in autoCompleteCustomer($viewValue)"
                                            typeahead-on-select="onSelect($item)"/>
-                                    
                                     <span ng-show="proposalForm.customer.$invalid && validate" class="errorForm">
-                                        O segurado precisa ser preenchido.
-                                    </span>
-                                    
+                           O segurado precisa ser preenchido.
+                           </span>
                                     <span ng-show="!validateCustomer() && validate && !proposalForm.customer.$invalid" class="errorForm">
-                                        Informe um segurado válido
-                                    </span>
+                           Informe um segurado válido
+                           </span>
                                 </div>
                             </div>
                         </div>
@@ -64,10 +67,10 @@
                                 <div class="form-group">
                                     <strong>Nome:</strong>
                                     <span ng-if="customer.type == 1" tooltip="{{customer.name | hidetext:25}}">{{customer.name
-                                        | chiptext:25}}</span>
+                           | chiptext:25}}</span>
                                     <span ng-if="customer.type == 2"
-                                           tooltip="{{customer.corporateName | hidetext:25}}">{{customer.corporateName |
-                                        chiptext:25}}</span>
+                                          tooltip="{{customer.corporateName | hidetext:25}}">{{customer.corporateName |
+                           chiptext:25}}</span>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -123,10 +126,8 @@
                             </div>
                             <div class="col-md-5 search-input">
                                 <div class="form-group" ng-if="!propertyDetails">
-
                                     <label ng-show="!editValue">Detalhes<i class="colorRequired">*</i></label>
                                     <label ng-show="editValue">Placa<i class="colorRequired">*</i></label>
-
                                     <input ng-if="!editValue" type="text" ng-model="propertyData.name"
                                            class="form-control " autocomplete="off"
                                            name="property" placeholder="Clique para selecionar uma propriedade"
@@ -134,7 +135,6 @@
                                            typeahead="item as returnNames(item) for item in autoCompleteProperty($viewValue, propertyType, customer.id)"
                                            typeahead-on-select="onSelectProperty($item)"
                                            required/>
-
                                     <input ng-if="editValue" type="text"
                                            ng-model="property.vehicle.vehicleLicensePlate"
                                            class="form-control " autocomplete="off"
@@ -144,7 +144,6 @@
                                            typeahead-on-select="onSelectProperty($item)" mask="@@@-9999" upper-Case
                                            restrict="reject"
                                            required/>
-
                                     <span ng-show="proposalForm.property.$invalid && validate && !editValue"
                                           class="errorForm">
                            A descrição precisa ser preenchida.
@@ -188,7 +187,7 @@
                                                    autocomplete="off"
                                                    typeahead="item as item.corporateName for item in autoCompleteInsurer($viewValue)"
                                                    typeahead-on-select="onSelectInsurer($item)"
-                                                   ng-disabled="property === '' || property === undefined || erroProperty && policy.fleets.length == 0 || erroProperty && policy.fleets.length > 0 && !isFleet"/>
+                                                   ng-disabled="property === '' || property === undefined || erroProperty && proposal.fleets.length == 0 || erroProperty && proposal.fleets.length > 0 && !isFleet"/>
                                             </span>
                                             </p>
                                             <span ng-show="proposalForm.insurer.$invalid && validate" class="errorForm">
@@ -226,7 +225,7 @@
                                         <div class="form-group">
                                             <label>Nº de Parcelas<i class="colorRequired">*</i></label>
                                             <select class="form-control " name="installments" required
-                                                    ng-model="policy.installmentsNumber"
+                                                    ng-model="proposal.installmentsNumber"
                                                     ng-change="enabedFields = true"
                                                     ng-disabled="!validateValue">
                                                 <option value="">- selecione -</option>
@@ -253,9 +252,9 @@
                                         <div class="form-group">
                                             <label>Prêmio Líquido (R$) <i class="colorRequired">*</i></label>
                                             <input type="text" class="form-control "
-                                                   ng-model="policy.netAward"
+                                                   ng-model="proposal.netAward"
                                                    ng-disabled="!enabedFields"
-                                                   ng-change="calculateValues(true, true, 'FOR_NET_AWARD')"
+                                                   ng-change="calculate()"
                                                    ui-number-mask="2" , ui-negative-number restrict="reject">
                                         </div>
                                     </div>
@@ -263,7 +262,7 @@
                                         <div class="form-group">
                                             <label>Nº da Proposta<i class="colorRequired">*</i></label>
                                             <input class="form-control " name="proposalNumber" required
-                                                   autocomplete="off" ng-model="policy.proposalNumber"
+                                                   autocomplete="off" ng-model="proposal.proposalNumber"
                                                    placeholder="Ex.: 007"
                                                    ng-disabled="!enabedFields"
                                                    maxlength="25" onkeypress="return onlyNumber(event)">
@@ -283,69 +282,68 @@
                                     <div class="col-md-3">
                                         <div class="form-group input-brokerage">
                                             <label>Comissão Corretora (%)<i class="colorRequired">*</i></label>
-
                                             <input class="form-control "
-                                                   ng-model="policy.brokerageCommissionPercent"
-                                                   ng-change="calculateValues(false, false, 'FOR_BROKERAGE')"
+                                                   ng-model="proposal.brokerageCommissionPercent"
+                                                   ng-change="calculate('FOR_BROKERAGE')"
                                                    ng-disabled="!enabedFields"
                                                    ui-percentage-mask max="1" name="brokerageComissionPercent"
                                                    placeholder="Ex.: 10%">
-
                                             <span ng-show="proposalForm.brokerageComissionPercent.$invalid && validate"
                                                   class="errorForm">
-                                 			Informe a comiss&atilde;o da corretora.
+                                 Informe a comiss&atilde;o da corretora.
                                  </span>
-
                                             <span ng-show="proposalForm.brokerageComissionPercent.$error.max"
                                                   class="errorForm">
-                                 			A comiss&atilde;o da corretora n&atilde;o pode exceder 100%
+                                 A comiss&atilde;o da corretora n&atilde;o pode exceder 100%
                                  </span>
-
+                                            <div class="text-center">
+                                                <span class="color-commission">{{proposal.brokerageCommission | customCurrency:'R$ '}}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group input-producer">
                                             <label>Comissão Produtor (%)<i class="colorRequired">*</i></label>
                                             <input name="producerComission" class="form-control "
-                                                   ng-model="policy.producerCommissionPercent"
-                                                   ng-change="calculateValues(false, false, 'FOR_PRODUCER')"
+                                                   ng-model="proposal.producerCommissionPercent"
+                                                   ng-change="calculate('FOR_PRODUCER')"
                                                    ng-disabled="!enabedFields"
                                                    ui-percentage-mask max="1"
                                                    placeholder="ex.: 20%">
-
                                             <span ng-show="proposalForm.producerComission.$invalid && validate"
                                                   class="errorForm">
-                                 			Informe a comiss&atilde;o do produtor.
+                                 Informe a comiss&atilde;o do produtor.
                                  </span>
-
                                             <span ng-show="proposalForm.producerComission.$error.max" class="errorForm">
-                                 			A comiss&atilde;o do produtor n&atilde;o pode exceder 100%
+                                 A comiss&atilde;o do produtor n&atilde;o pode exceder 100%
                                  </span>
-
+                                            <div class="text-center">
+                                                <span class="color-commission">{{proposal.producerCommission | customCurrency:'R$ '}}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3" ng-if="propertyType === 'VEHICLE'">
                                         <div class="form-group input-workedCommission">
                                             <label>Comissão Trabalhada (%)<i class="colorRequired">*</i></label>
                                             <input class="form-control "
-                                                   ng-model="policy.policyCommissionPercent"
-                                                   name="policyCommissionPercent"
-                                                   ng-disabled="editValue"
-                                                   ng-change="calculateValues(false, false, 'FOR_POLICY')"
+                                                   ng-model="proposal.proposalCommissionPercent"
+                                                   name="proposalCommissionPercent"
+                                                   ng-disabled="!enabedFields"
+                                                   ng-change="calculate('FOR_PROPOSAL')"
                                                    ui-percentage-mask ui-percentage-value min="0.0001" max="1"
                                                    placeholder="Ex.: 30%"
                                                    autocomplete="off">
-
-                                            <span ng-show="proposalForm.policyCommissionPercent.$error.max"
+                                            <span ng-show="proposalForm.proposalCommissionPercent.$error.max"
                                                   class="errorForm">
-                                 			A comiss&atilde;o trabalhada n&atilde;o pode exceder 100%
+                                 A comiss&atilde;o trabalhada n&atilde;o pode exceder 100%
                                  </span>
-
-                                            <span ng-show="proposalForm.policyCommissionPercent.$error.min"
+                                            <span ng-show="proposalForm.proposalCommissionPercent.$error.min"
                                                   class="errorForm">
-                                 			A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
+                                 A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
                                  </span>
-
+                                            <div class="text-center">
+                                                <span class="color-commission">{{proposal.proposalCommission | customCurrency:'R$ '}}</span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -354,21 +352,22 @@
                                         <div class="form-group input-workedCommission">
                                             <label>Comissão Trabalhada (%)<i class="colorRequired">*</i></label>
                                             <input class="form-control "
-                                                   ng-model="policy.policyCommissionPercent"
-                                                   name="policyCommissionPercent"
-                                                   ng-disabled="editValue"
-                                                   ng-change="calculateValues(false, false, 'FOR_POLICY')"
+                                                   ng-model="proposal.proposalCommissionPercent"
+                                                   name="proposalCommissionPercent"
+                                                   ng-disabled="!enabedFields"
+                                                   ng-change="calculate('FOR_PROPOSAL')"
                                                    ui-percentage-mask ui-percentage-value min="0.0001"
-                                                   placeholder="Ex.: 30%">
-
-                                            <span ng-show="proposalForm.policyCommissionPercent.$error.min"
+                                                   placeholder="Ex.: 30%"
+                                                   autocomplete="off">
+                                            <span ng-show="proposalForm.proposalCommissionPercent.$error.min"
                                                   class="errorForm">
-                                 			A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
+                                 A comiss&atilde;o trabalhada n&atilde;o pode ser menor ou igual a 0
                                  </span>
-
+                                            <div class="text-center">
+                                                <span class="color-commission">{{proposal.proposalCommission | customCurrency:'R$ '}}</span>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <br/>
                                 <div class="sessions-proposalForm">
@@ -379,39 +378,36 @@
                                     <div class="col-md-3">
                                         <div class="form-group input-discount">
                                             <label>Desconto Corretora (%)</label>
-                                            <input class="form-control " ng-model="policy.discountBrokerage"
+                                            <input class="form-control " ng-model="proposal.discountBrokerage"
                                                    ng-disabled="!enabedFields" name="discountBrokerage"
-                                                   ng-change="calculateValues(true, false, 'FOR_DISCOUNT_BROKERAGE')"
+                                                   ng-change="calculate(true, false, 'FOR_DISCOUNT_BROKERAGE')"
                                                    ui-percentage-mask max="brokerageMax"
                                                    placeholder="Ex.: 5%">
-
                                             <span ng-show="proposalForm.discountBrokerage.$invalid" class="errorForm">
-                                 			Desconto excede a comiss&atilde;o da corretora
+                                 Desconto excede a comiss&atilde;o da corretora
                                  </span>
-
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group input-discount">
                                             <label>Desconto Produtor (%)</label>
-                                            <input class="form-control " ng-model="policy.discount"
+                                            <input class="form-control " ng-model="proposal.discount"
                                                    ng-disabled="!enabedFields" name="discount"
                                                    max="producerMax"
-                                                   ng-change="calculateValues(true, false, 'FOR_DISCOUNT')"
+                                                   ng-change="calculate(true, false, 'FOR_DISCOUNT')"
                                                    ui-percentage-mask
                                                    placeholder="Ex.: 10%">
-
                                             <span ng-show="proposalForm.discount.$invalid" class="errorForm">
-                                 			Desconto excede a comiss&atilde;o do produtor
+                                 Desconto excede a comiss&atilde;o do produtor
                                  </span>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group input-aggravation">
                                             <label>Agravamento (%)</label>
-                                            <input class="form-control " ng-model="policy.aggravation"
+                                            <input class="form-control " ng-model="proposal.aggravation"
                                                    ng-disabled="!enabedFields"
-                                                   ng-change="calculateValues(false, true, 'FOR_AGGRAVATION')"
+                                                   ng-change="calculate(false, true, 'FOR_AGGRAVATION')"
                                                    ui-percentage-mask
                                                    placeholder="Ex.: 10%">
                                         </div>
@@ -427,21 +423,20 @@
                                         <div class="form-group">
                                             <label>Inicio da vig&ecirc;ncia<i class="colorRequired">*</i></label>
                                             <input type="text" name="startTerm" class="form-control "
-                                                   ng-model="policy.startTerm" mask="99/99/9999"
+                                                   ng-model="proposal.startTerm" mask="99/99/9999"
                                                    onkeypress="return onlyNumber(event)"
                                                    ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/"
                                                    ng-disabled="!enabedFields"
                                                    ng-change="endCallYear(proposalForm.startTerm.$invalid, proposalForm.endTerm.$invalid)"
                                                    required/>
-                                            <span ng-if="proposalForm.startTerm.$invalid" class="errorForm">
-                                 Informe uma data v&aacute;lida</span>
+                                            <span ng-if="proposalForm.startTerm.$invalid" class="errorForm">Informe uma data v&aacute;lida</span>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Fim da vig&ecirc;ncia <i class="colorRequired">*</i></label>
                                             <input type="text" name="endTerm" class="form-control "
-                                                   ng-model="policy.endTerm" mask="99/99/9999"
+                                                   ng-model="proposal.endTerm" mask="99/99/9999"
                                                    onkeypress="return onlyNumber(event)"
                                                    ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/"
                                                    ng-disabled="!enabedFields"
@@ -454,7 +449,7 @@
                                         <div class="form-group">
                                             <label>Data de transmiss&atilde;o <i class="colorRequired">*</i></label>
                                             <input type="text" name="dateTransmission" class="form-control "
-                                                   ng-model="policy.dateTransmission" mask="99/99/9999"
+                                                   ng-model="proposal.dateTransmission" mask="99/99/9999"
                                                    onkeypress="return onlyNumber(event)"
                                                    ng-pattern="/^(((0[1-9]|[12][0-9]|3[01])([-.\/])(0[13578]|10|12)([-.\/])(\d{4}))|(([0][1-9]|[12][0-9]|30)([-.\/])(0[469]|11)([-.\/])(\d{4}))|((0[1-9]|1[0-9]|2[0-8])([-.\/])(02)([-.\/])(\d{4}))|((29)(\.|-|\/)(02)([-.\/])([02468][048]00))|((29)([-.\/])(02)([-.\/])([13579][26]00))|((29)([-.\/])(02)([-.\/])([0-9][0-9][0][48]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][2468][048]))|((29)([-.\/])(02)([-.\/])([0-9][0-9][13579][26])))$/"
                                                    ng-disabled="!enabedFields" required/>
@@ -463,17 +458,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class=" col-md-offset-2"
-                                         ng-if="!validateDates(policy.startTerm, policy.endTerm)">
-                              <span class="errorForm">
-                              O período informado é inválido.
-                              </span>
-                                    </div>
                                     <div class="col-md-12">
                                         <br/>
                                         <div class="form-group">
                                             <label>Observações</label>
-                                            <textarea class="form-control " ng-model="policy.comments"
+                                            <textarea class="form-control " ng-model="proposal.comments"
                                                       maxlength="450"
                                                       placeholder="Observações acerca da proposta"
                                                       ng-disabled="!enabedFields" rows="4"></textarea>

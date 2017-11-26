@@ -91,7 +91,6 @@
                             <th class="leftAlign">Descrição</th>
                             <th class="leftAlign">Produtor</th>
                             <th class="leftAlign">Seguradora</th>
-                            <th class="centralizer">Status</th>
                             <th class="centralizer">Vigência</th>
                             <th class="centralizer">Proposta</th>
                             <th class="rightAlign">Prêmio</th>
@@ -101,45 +100,42 @@
                         <tbody>
                         <tr class="gradeU font-size-grid font-list-table" ng-repeat="item in itens" ng-show="isShow">
                             <td class="leftAlign">
-                                <label ng-if="item.customer.type == 1" tooltip="{{item.customer.name | hidetext:10}}"
+                                <span ng-if="item.customer.type == 1" tooltip="{{item.customer.name | hidetext:10}}"
                                        class="text-capitalize">{{item.customer.name
-                                    | chiptext:10 | lowercase}}</label>
-                                <label ng-if="item.customer.type == 2"
+                                    | chiptext:10 | lowercase}}</span>
+                                <span ng-if="item.customer.type == 2"
                                        tooltip="{{item.customer.corporateName | hidetext:10}}">{{item.customer.corporateName
-                                    | chiptext:10 | lowercase}}</label>
+                                    | chiptext:10 | lowercase}}</span>
                             </td>
                             <td class="leftAlign">
-                                <label>{{propertyName(item.property.propertyType)}}</label>
+                                <span>{{propertyName(item.property.propertyType)}}</span>
                             </td>
                             <td class="leftAlign">
-                                <label tooltip="{{description(item.property, item.property.propertyType, item) | hidetext:10}}">
+                                <span tooltip="{{description(item.property, item.property.propertyType, item) | hidetext:10}}">
                                     {{description(item.property, item.property.propertyType, item) | chiptext:10}}
-                                </label>
+                                </span>
                             </td>
                             <td class="leftAlign">
-                                <label tooltip="{{item.producerName | hidetext:10}}" class="text-capitalize">{{item.producerName
+                                <span tooltip="{{item.producer.name | hidetext:10}}" class="text-capitalize">{{item.producer.name
                                     |
-                                    chiptext:10 | lowercase}}</label>
+                                    chiptext:10 | lowercase}}</span>
                             </td>
                             <td class="leftAlign">
-                                <label tooltip="{{item.insurerName | hidetext:10}}" class="text-capitalize">{{item.insurerName
+                                <span tooltip="{{item.insurer.corporateName | hidetext:10}}" class="text-capitalize">{{item.insurer.corporateName
                                     |
-                                    chiptext:10 | lowercase}}</label>
-                            </td>
-                            <td class="centralizer">
-                                <label tooltip="{{getStatusDescriptionPolicy(item)}}">{{getStatusPolicy(item)}} </label>
+                                    chiptext:10 | lowercase}}</span>
                             </td>
 
                             <td class="centralizer">{{item.startTerm | date:dd/MM/yyyy}} - {{item.endTerm | date:dd/MM/yyyy}}</td>
 
                             <td class="centralizer">
-                                <label tooltip="{{item.proposalNumber | hidetext:15}}">{{item.proposalNumber | chiptext:15}}</label>
+                                <span tooltip="{{item.proposalNumber | hidetext:15}}">{{item.proposalNumber | chiptext:15}}</span>
                             </td>
 
                             <td class="rightAlign">{{item.netAward | customCurrency:"R$"}}</td>
 
                             <td class="centralizer">
-                                <a href="" ng-click="edit(item.id)" tooltip="Editar">
+                                <a href="" ng-click="edit(item.id, item.property.propertyType)" tooltip="Editar">
                                     <span class="fa fa-fw fa-edit fa-2x"></span>
                                 </a>
                                 <a href="" ng-click="remove(item)" tooltip="Excluir">

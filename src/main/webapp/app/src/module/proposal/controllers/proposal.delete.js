@@ -1,15 +1,15 @@
-app.controller('deleteInsurerController', function ($scope, $modalInstance, $timeout, maskFactory, insurer, insurerService) {
+app.controller('deleteProposalController', function ($scope, $modalInstance, $timeout, maskFactory, proposal, proposalService) {
 
     angular.extend($scope, maskFactory);
-    $scope.item = insurer;
+    $scope.item = proposal;
 
     $scope.ok = function () {
-        insurerService.remove(insurer).then(function () {
-            var alert = {type: "success", msg: 'Seguradora removida com sucesso'};
+        proposalService.remove(proposal).then(function () {
+            var alert = {type: "success", msg: 'Proposta removida com sucesso'};
             $modalInstance.close(alert);
         },
         function (err) {
-            var alert = {type: "danger", msg: 'Ops! Ocorreu um problema ao excluir esta seguradora. Tente novamente'};
+            var alert = {type: "danger", msg: 'Ops! Ocorreu um problema ao excluir esta proposta. Tente novamente'};
             $modalInstance.close(alert);
         });
     };

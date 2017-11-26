@@ -88,20 +88,19 @@ public class ProposalController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> createFromJson(@RequestBody String json, UriComponentsBuilder uriBuilder,
-                                                 @RequestParam(value = "brokerageName", required = false) String brokerageName,
-                                                 @RequestParam(value = "status", required = false) String status,
-                                                 @RequestParam(value = "nameUser", required = false) String nameUser) throws PortalClienteException {
+    public ResponseEntity<String> createFromJson(@RequestBody String json, UriComponentsBuilder uriBuilder) throws PortalClienteException {
 
         try {
             Proposal proposal = Proposal.fromJson(json);
             proposal.save(proposal);
             return new ResponseEntity<String>(proposal.toJson(), setHeaders(), HttpStatus.CREATED);
         } catch (PortalClienteException e) {
-            return new ResponseEntity<String>(toJson("msg", e.getMessage()), setHeaders(), HttpStatus.BAD_REQUEST);
+            erro(e.getMessage());
+            return new ResponseEntity<String>(messageToJson(), setHeaders(), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
-            System.out.println(ex);
-            return new ResponseEntity<String>(toJson("msg", "Ops! Aconteceu algum problema. Atualize a página e tente novamente"), setHeaders(), HttpStatus.BAD_REQUEST);
+            ex.printStackTrace();
+            erro("Ops! Aconteceu algum problema. Atualize a página e tente novamente");
+            return new ResponseEntity<String>(messageToJson(), setHeaders(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -113,18 +112,19 @@ public class ProposalController extends AbstractController {
 
         try {
             if (Proposal.edit(proposal) == null) {
-                return new ResponseEntity<String>(toJson("msg", "Erro ao tentar alterar a apólice"), setHeaders(), HttpStatus.BAD_REQUEST);
+                erro("Erro ao tentar alterar a apólice");
+                return new ResponseEntity<String>(messageToJson(), setHeaders(), HttpStatus.BAD_REQUEST);
             }
         } catch (PortalClienteException e) {
-            return new ResponseEntity<String>(toJson("msg", e.getMessage()), setHeaders(), HttpStatus.BAD_REQUEST);
+            erro(e.getMessage());
+            return new ResponseEntity<String>(messageToJson(), setHeaders(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>(setHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     @Transactional
-    public ResponseEntity<String> deleteFromJson(@PathVariable("id") Integer id,
-                                                 @RequestParam(value = "fileRepositoryPath", required = true) String fileRepositoryPath) throws PortalClienteException {
+    public ResponseEntity<String> deleteFromJson(@PathVariable("id") Integer id) throws PortalClienteException {
 
         try {
             // Instanciado, pois o delete() chama um método @Autowired

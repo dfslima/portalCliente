@@ -1,4 +1,4 @@
-app.controller('searchCustomerController', function ($scope, $location, $rootScope, $modal, $timeout, maskFactory, paginationFactory, customerService) {
+app.controller('searchCustomerController', function ($scope, $location, $rootScope, $modal, $timeout, maskFactory, paginationFactory, customerService, toast) {
 
     angular.extend($scope, maskFactory);
     angular.extend($scope, paginationFactory);
@@ -58,9 +58,12 @@ app.controller('searchCustomerController', function ($scope, $location, $rootSco
             }
         });
 
-        modalInstance.result.then(function (pro) {
-            $scope.alertSuccess = [{type: "success", msg: 'Segurado removido com sucesso!'}];
-            $scope.search();
+        modalInstance.result.then(function (response) {
+            toast.open(response.type, response.msg);
+
+            if(response.type != 'danger') {
+                $scope.search();
+            }
         });
     };
 });
